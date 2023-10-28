@@ -1,0 +1,22 @@
+Generate scripts for release
+
+1) Right click database name and click tasks and click Generate script..
+2) Click next and will land to choose object tab and click select specific database object
+
+Eg.
+For Stored procedure:
+Select stoted procedures you want and click next, from there click advanced 
+In generel section modify check for object existense to true,
+modify drop and create to script drop and create,
+modify Sscript Use Database to false
+
+and click okay
+
+3) clcik save as script file and single script file and select desired location and click next and next & wait for some time and finish.
+
+
+for All stored procedures, views => single script file
+for table create => single script file
+for table alter =>  Single script file
+
+Mention order of exceution of tables, sp, funtions, views.

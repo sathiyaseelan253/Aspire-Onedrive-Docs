@@ -1,0 +1,7 @@
+Angular:
+
+Issue:
+Defined the type of variable but not initialized values
+
+Fix:
+Go to tsConfig.js => change strict from true to false

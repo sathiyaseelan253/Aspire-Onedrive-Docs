@@ -1,0 +1,47 @@
+Asp.net core
+
+Visual studio code
+
+1) C# Extension by microsoft in VS code
+2) Install .net 8.0 sdk in microsoft website
+3) Install Nuget package manager in VS code
+4) Create new project
+dotnet new mvc -o ProjectName
+
+Get into the folder 
+
+5) Add new package
+dotnet add package 
+
+6) dotnet watch
+dotnet build
+dotnet run
+
+Debug code:
+1) Select Run and Debug on the side bar (or press Ctrl + Shift + D)
+2) Click create a launch.json file
+3) Select environment: .NET Core
+4) launch.json => "args": ["urls=http://localhost:5002"],
+5) F5
+
+Reflection 
+
+Dependency injection (Constructor, method and property)
+
+Data validation
+
+Ssytem.Random
+System.Random.Shuffle
+System.Security.Cryptography.RandomNumberGenerator
+System.Collections.Frozen
+System.Bufferes.IndexOfAnyValues<T>
+System.Text.CompositeFormat
+System.IO.Hashing.XxHash3 and 
+System.IO.Hashing..XxHash128
+
+
+
+Singleton
+AddSingleton
+Authentication & authrozation
+async

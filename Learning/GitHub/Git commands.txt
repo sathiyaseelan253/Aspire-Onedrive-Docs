@@ -1,0 +1,42 @@
+1) To know git version 
+git --version
+
+Pull request:
+
+1) git config user.name sathyaseelan 
+
+2) git config user.email sathyaseelan253@gmail.com
+
+3) mkdir demoFolder, cd get into that newly created folder
+
+4) git init
+
+5) git remote add origin "github repo URL"
+
+6) To check connection is established correclty (fetch and push URL's will be shown)
+git remote -v
+
+7) git pull origin master
+
+8) Start development
+
+9) After development, push code to github
+git add .
+
+10) git status => To know what are the modified files
+
+11) git commit -m "MESSAGE"
+push codes to staging
+
+12) git log => List who are made that changes
+
+13) To know the difference b/t 2 commits:
+git log
+
+git diff LAST8Numbers
+
+13) git push origin master
+
+
+Cloning the repo to local machine:
+1) git clone "LINK OF REPOSITORY"

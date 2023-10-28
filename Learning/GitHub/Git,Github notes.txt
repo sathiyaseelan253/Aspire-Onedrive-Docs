@@ -1,0 +1,65 @@
+Issue :
+Windows git "warning: LF will be replaced by CRLF", is that warning tail backward?
+
+Fix:
+git config --global core.autocrlf false
+
+Step 1:
+
+Create personal access token from profile settings => Developer settings => To avoid issues when pushing & pulling code
+
+Token => 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
+
+git clone https://{Token}@github.com/{github username}/{repository name}.git
+
+https://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@github.com/sathiyaseelan253/Angular_RecipeBook.git
+
+step 2:
+Get into the project in local
+
+cd {reponame}
+
+step 3:
+Make chnages in local
+
+step 4: List modified files (Untracted files)  in local
+git status 
+
+step 5:
+git add . 
+&
+git status
+
+step 6:
+git commit -m "Any message"
+
+step 7:
+git status => nothing to commit, working tree clean
+
+step 8:
+git push
+
+************************ Another commands *******************
+
+1) git branch => List all branches for the repo
+
+2) git checkout -b {NewBranch} => Create new branch and clone the current repository to this NewBranch (only in local)
+
+3) Create newBranch in Git => git push --set-upstream origin {NewBranchName}
+
+4) Push to git (Move changes from local to Git) => git push
+
+5) Merge all new changes from another branch to master branch:
+git checkout master
+
+git merge {Branch that you want to merge to master}
+
+git push
+
+------------------- Add Existing project to Github ----------
+
+git init
+git add .
+git commit -m "Add existing project files to Git"
+git remote add origin https://github.com/cameronmcnz/example-website.git
+git push -u -f origin master

@@ -1,0 +1,28 @@
+NgRx
+
+1) Install NgRx 
+ng add @ngrx/schematics@latest
+
+2) Create action
+ng g action Action_Name
+
+3) Create reducer
+ng g reducer Reducer_Name
+
+Create 
+ng g store StoreName --root --module app.module.ts
+
+4) To enable shortcut for creating action, store
+ng config cli.defaultCollection @ngrx/schematics
+
+5)
+npm install @ngrx/store --save
+
+6) 
+npm install @ngrx/effects --save
+
+7) 
+npm install @ngrx/entity --save
+
+8) 
+npm install @ngrx/store-devtools --save
