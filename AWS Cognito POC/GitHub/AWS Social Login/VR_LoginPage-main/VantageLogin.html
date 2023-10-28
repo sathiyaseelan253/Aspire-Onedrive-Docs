@@ -1,0 +1,81 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vantage Login page</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- CSS only -->
+    <link rel="stylesheet" href="./VantageLogin.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+  <body>
+  <script src="./VantageLogin.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script type="text/javascript" src="https://alcdn.msauth.net/lib/1.1.3/js/msal.min.js"></script>
+    <!-- Display user's profile info -->
+    <a href="./Home.html" id="home">Go to home page</a>
+    <a href="javascript:void(0);" onclick="fbLogOut();" id="FBLogout">LogOut from Facebook</a>
+    <a href="javascript:void(0);" onclick="GoogleLogOut();" id="GoogleLogout">LogOut from Google</a>
+     <!-- Display login status -->
+     <div id="status"></div>
+    <div class="ac-data" id="userData"></div>
+
+    <div class="container" id="loginDiv">
+      <form action="/action_page.php">
+        <div class="row">
+          <h2 id="loginH2">
+            Login to Vantage Investor Portal
+          </h2>
+          <div class="vl">
+            <span class="vl-innertext">or</span>
+          </div>
+          <div class="col inputFields">
+            <label>Email</label>
+            <input
+              type="text"
+              name="username"
+              placeholder="Email"
+              required
+            />
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              required
+            />
+            <input type="submit" value="Login" />
+          </div>
+
+          <div class="col socialLoginBtns">
+            <div class="hide-md-lg">
+              <p>Or sign in manually:</p>
+            </div>
+            <a><p id="social">Social Media Authentication</p></a>
+            <a href="javascript:void(0);" class="fb btn" onclick="fbLogin();" id="fbLink">
+                <i class="fa fa-facebook fa-fw"></i> Login with Facebook
+              </a>
+            <!-- <div class="fb-login-button" data-width="" data-size="medium" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div> -->
+            <a href="javascript:void(0);" id="googleLink"></a>
+            <!-- <a href="#" class="linkedin btn">
+                <i class="fa fa-linkedin fa-fw"></i> Login with Linkedin
+              </a> -->
+              <a href="javascript:void(0);" class="microsoft btn" onclick="MicrosoftLogin();" id="microsoftLink">
+                <i class="fa fa-windows fa-fw"></i> Login with Microsoft
+              </a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <script type="text/javascript" src="./authConfig.js"></script>
+    <script type="text/javascript" src="./graphConfig.js"></script>
+    <script type="text/javascript" src="./ui.js"></script>
+
+    <script type="text/javascript" src="./authPopup.js"></script>
+    <script type="text/javascript" src="./graph.js"></script>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+POC_ClientName
+Pool Name: POC
+Pool Id us-west-2_nBtDiS1TG
+Pool ARN arn:aws:cognito-idp:us-west-2:186010723985:userpool/us-west-2_nBtDiS1TG
+app client id: 6spbljmlr7s2em4nu5b5tslnp6
+app client secret: 13cpou4nroe2q7n5oc5enpih9t1ma38iekmoe0u8qfj6pe88mlc4
+awscognitopoc.insightportal.info
+
+
+https://vantagepoc.auth.us-west-2.amazoncognito.com
+https://aws.amazon.com/premiumsupport/knowledge-center/cognito-linkedin-auth0-social-idp/
+
+
+
+Pool Id us-west-2_nBtDiS1TG
+    Pool ARN arn:aws:cognito-idp:us-west-2:186010723985:user
+app client id: 6spbljmlr7s2em4nu5b5tslnp6
+app client secret: 13cpou4nroe2q7n5oc5enpih9t1ma38iekmoe0u8qfj6pe88mlc4
+awscognitopoc.insightportal.info
+From Karthik Thanikachalam to Everyone 07:37 PM
+https://vantagepoc.auth.us-west-2.amazoncognito.com
+https://aws.amazon.com/premiumsupport/knowledge-center/cognito-linkedin-auth0-social-idp/
+
+LinkedIN reference doc: https://aws.amazon.com/premiumsupport/knowledge-center/cognito-linkedin-auth0-social-idp/
+
+auth0 : 
+Domain : dev-u7npac52.us.auth0.com
+client ID : cGnluS0nEes2a6dtqf4KoPP6XVw1vXQf
+secret : Mc46L57aSEnUfD3H2vO5TiYK1QxFpzYWeUbgdgzd83s2S2aUc5tLITmqFWycibql
+
+Allowed callback URL :
+
+Facebook
+
+
+App name : VR_CognitoPOC
+
+Ref Doc = https://developers.facebook.com/docs/facebook-login/web
+
+Google:
+
+Refer: https://ryandam9.medium.com/using-google-as-an-identity-provider-in-aws-cognito-acddfb58fad

@@ -1,0 +1,41 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="./VantageLogin.css" />
+    <script src="./VantageLogin.js"></script>
+  </head>
+  <body>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      $(document).ready(function () {
+      FB.Event.subscribe("auth.login", login_event);
+      var login_event = function (response) {
+        console.log("login_event");
+        console.log(response.status);
+        console.log(response);
+        if (response.status.lowerCase() == "connected") {
+          fbLogin();
+        }
+      };
+      GetGoogleAccountData();
+    });
+
+    </script>
+    <a href="javascript:void(0);" onclick="fbLogOut();" id="FBLogout"
+      >LogOut from Facebook</a
+    >
+    <a href="javascript:void(0);" onclick="GoogleLogOut();" id="GoogleLogout"
+      >LogOut from Google</a
+    >
+    <a href="javascript:void(0);" onclick="MicrosoftLogOut();" id="MicrosoftLogout"
+    >LogOut from Microsoft</a
+  >
+    <!-- Display login status -->
+    <div id="status"></div>
+    <div class="ac-data" id="userData"></div>
+  </body>
+</html>
