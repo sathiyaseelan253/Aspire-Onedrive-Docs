@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript" src="https://unpkg.com/@passbase/button"></script>
+    <style>
+        .container {
+            margin-top: 20%;
+            text-align: center;
+        }
+
+        .verifyBtn {
+            margin: auto;
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Verify your identity now</h1>
+        <p>You can verify your identity for Vantage by clicking the verification button below</p>
+        <!--<button type="button" onclick="VerifyButtonClick()">Verify me</button>-->
+        <div id="passbase-button" class="verifyBtn"></div>
+    </div>
+    <script type="text/javascript">
+        const element = document.getElementById("passbase-button");
+        const passBaseApiKey = '@System.Configuration.ConfigurationManager.AppSettings["PassBasePublishableAPIKey"]';
+
+        Passbase.renderButton(element, passBaseApiKey, {
+            onSubmitted: (identityAccessKey) => {
+                console.log("User completed the verification", identityAccessKey);
+            },
+            onFinish: (identityAccessKey) => {
+                window.location.href = ("https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_iframe_src")
+            },
+            onError: (errorCode) => { },
+            onStart: () => { }
+        });
+        // Passbase.renderButton(element,apiKey,{
+        //   hidden:true,
+        // })
+        //function VerifyButtonClick() {
+        //    Passbase.start();
+        //}
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+</body>
+</html>

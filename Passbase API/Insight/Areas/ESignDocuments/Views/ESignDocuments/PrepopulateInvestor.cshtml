@@ -1,0 +1,3021 @@
+﻿@using Combres
+@using Combres.Mvc
+@using InSight.Core.Utils
+@using InSight.Core.Constants
+@using System.Configuration;
+@model InSight.Web.Application.Areas.ESignDocuments.Models.InvestorList
+@{
+    ViewBag.Title = "PrepopulateInvestor";
+    Layout = "~/Views/Shared/MasterLayout65.cshtml";
+}
+
+@*<div class="row">
+            <div class="col-sm-8 col-md-8" style="padding-top:2%; font-size:medium;">
+                Document Name&nbsp; <b><span id="lblDocumentName" class="as-sub-heading" style="font-size:medium;"> @Html.DisplayFor(item => item.DocumentName ) </span></b><span id="lblLine">|</span>
+                Document Type&nbsp;<b><span id="lblDocType" class="as-sub-heading" style="font-size:medium;"> @Html.DisplayFor(item => item.DocType ) </span></b>
+            </div>
+    </div>*@
+<div id="page-content-wrapper">
+    <section class="container-fluid min-page-height">
+        <form class="msform form-horizontal" id="msform">
+            <!-- progressbar -->
+            <div class="row">
+                <div class="col-12 col-md-3 col-lg-4"></div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <ul id="progressbar" class="msprogressbar">
+                        <li class="active">Investor Selection</li>
+                        <li class="hideStep">Investor Basics</li>
+                        <li class="hideStep">Investor Address</li>
+                        <li class="">Investor Wire</li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-3 col-lg-4"></div>
+            </div>
+
+            <!-- fieldsets -->
+            <fieldset>
+                <div id="divaddinv" class="row">
+                    <div class="col-12 col-md-12 col-lg-12 d-flex justify-content-end align-items-end">
+                        <a class="btn" style="text-decoration-line: underline;width:' + width + ';text-align:left" href="/AddInvestor/AddInvestor"> Add Investor</a>
+                    </div>
+                </div>
+                <h1 class="fs-title">Step 1: Select An Investor</h1>
+                <div id="Step1ErrorMessage"> </div>
+                <div id="ListHolder">
+                </div>
+                <input type="button" name="next" class="next action-button" id="Step1Next" value="Next" />
+            </fieldset>
+            <fieldset>
+                <h1 class="fs-title">Step 2: Investor Basic Details</h1>
+                <!--<h3 class="fs-subtitle">Your presence on the social network</h3>-->
+                <div id="Step2ErrorMessage"> </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-group float-label-control" style="margin-top:30px;margin-bottom:25px;">
+                                <!--<div id="RoleTypeListHolder">-->
+                                <div class="form-check">
+                                    <label for="txtInvestortype"> Investor Type </label>
+                                    <div class="form-check">
+                                        <div style="text-align: left;padding: 20px 5px 5px 0px;">
+                                            <input class="form-check-input" type="radio" name="InvestorTypeRadioOptions" id="radioIndividual" value="Individual" />
+                                            <span style="padding-left:15px;"> Individual </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-check">
+                                        <div style="text-align: left;padding: 05px 5px 5px 0px;">
+                                            <input class="form-check-input" type="radio" name="InvestorTypeRadioOptions" id="radioEntity" value="Entity" />
+                                            <span style="padding-left:15px;">Entity</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--</div>-->
+                            </div>
+
+                            <div class="form-group float-label-control">
+                                <label for="txtInvestorName"> Investor Name </label>
+                                <input type="text" class="form-control" name="InvestorName" placeholder="Investor Name" id="txtInvestorName" />
+                            </div>
+                            <div class="form-group float-label-control">
+                                <label for="txtInvestorTitle"> Title </label>
+                                <input type="text" class="form-control" name="InvestorTitle" placeholder="Title" id="txtInvestorTitle" />
+                            </div>
+                            <div class="form-group float-label-control" id="divFirstName">
+                                <label for="txtInvestorFirstName"> First Name </label>
+                                <input type="text" class="form-control" name="InvestorFirstName" placeholder="First Name" id="txtInvestorFirstName" />
+
+                            </div>
+                            <div class="form-group float-label-control" id="divLastName">
+                                <label for="txtInvestorLastName"> Last Name </label>
+                                <input type="text" class="form-control" name="InvestorLastName" placeholder="Last Name" id="txtInvestorLastName" />
+
+                            </div>
+
+
+                            <div class="form-group float-label-control">
+                                <label for="txtInvestorEMail"> EMail ID </label>
+                                <input type="text" class="form-control" name="InvestorEMail" placeholder="EMail" id="txtInvestorEMail" />
+                            </div>
+                            <div class="form-group float-label-control">
+                                <label for="txtInvestorTelephone"> Telephone </label>
+                                <input type="text" class="form-control" name="InvestorTelephone" placeholder="Telephone" id="txtInvestorTelephone" />
+                            </div>
+                            <div class="form-group float-label-control d-none">
+                                <label for="txtInvestorTaxID"> Tax/SSN ID </label>
+                                <input type="text" class="form-control" name="InvestorTaxID" placeholder="Tax/SSNID" id="txtInvestorTaxID" />
+                            </div>
+                            <div class="form-group float-label-control w-100" style="padding-left:0 !important">
+                                <label> Investor Domicile </label>
+                                <select id="drpInvDomicile" name="drpInvDomicile" class="selectpicker darkDropdown-signup" data-width="auto" data-size="5"></select>
+                            </div>
+                            <div class="form-group float-label-control">
+                                <label for="txtCommitAmt"> Commitment Amount</label>
+                                <input type="text" class="form-control" name="InvestorCommitment" placeholder="Commitment Amount" id="txtCommitAmt" OnBlur="formatCurrency2();" OnKeyUp="formatSep();" />
+                            </div>
+                            <div class="form-group float-label-control" style="display:none">
+                                <label for="txtInvestorStatus"> Status </label>
+                                <input type="text" class="form-control" name="InvestorStatus" placeholder="Status" id="txtInvestorStatus" />
+                            </div>
+                            <div class="form-group float-label-control ForEntity">
+                                <label for="txtFormation"> Jurisdiction of organization, formation or incorporation </label>
+                                <input type="text" class="form-control" name="txtFormation" placeholder="Jurisdiction of organization, formation or incorporation" id="txtFormation" />
+                            </div>
+                            <div class="form-group float-label-control w-100 ForEntity" style="padding-left:0 !important">
+                                <label> Personal Identification Type</label>
+                                <select id="drpIDNumType" name="drpIDNumType" class="selectpicker darkDropdown-signup" data-width="auto" data-size="5">
+                                    <option value="Corporation no">Corporation no</option>
+                                    <option value="ID no">ID no</option>
+                                    <option value="Passport no">Passport no</option>
+                                </select>
+
+                            </div>
+                            <div class="form-group float-label-control ForEntity">
+                                <label for="txtIDNumValue">  Personal Identification Value </label>
+                                <input type="text" class="form-control" name="txtIDNumValue" placeholder="ID Value" id="txtIDNumValue" />
+                            </div>
+                            <div class="form-group float-label-control w-100 ForEntity" style="padding-left:0 !important">
+                                <label> Goverment Identification Type </label>
+                                <select id="drpTaxIDType" name="drpTaxIDType" class="selectpicker darkDropdown-signup" data-width="auto" data-size="5">
+                                    <option value="EIN">EIN</option>
+                                    <option value="ITIN">ITIN</option>
+                                    <option value="SSN">SSN</option>
+                                </select>
+
+                            </div>
+                            <div class="form-group float-label-control ForEntity">
+                                <label for="txtTaxYear">  Goverment Identification Value </label>
+                                <input type="text" class="form-control" name="txtGovtIDValue" placeholder="ID Value" id="txtGovtIDValue" />
+                            </div>
+                            <div class="form-group float-label-control ForEntity">
+                                <label for="txtTaxYear"> Taxable year end of the Purchaser </label>
+                                <input type="text" class="form-control" name="txtTaxYear" placeholder="Taxable year" id="txtTaxYear" />
+                            </div>
+                            <div class="form-group float-label-control w-100 ForEntity" style="padding-left:0 !important">
+                                <label> Authorized Signatory </label>
+                                <select id="drpASContact" name="drpASContact" class="selectpicker darkDropdown-signup" data-width="auto" data-size="5"></select>
+                            </div>
+                            <div class="form-group float-label-control ForEntity">
+                                <label for="txtASFirstName"> Authorized Signatory First Name </label>
+                                <input type="text" class="form-control" name="ASFirstName" placeholder="First Name" id="txtASFirstName" />
+                            </div>
+                            <div class="form-group float-label-control ForEntity">
+                                <label for="txtASLastName"> Authorized Signatory Last Name </label>
+                                <input type="text" class="form-control" name="ASLastName" placeholder="Last Name" id="txtASLastName" />
+                            </div>
+                            <div class="form-group float-label-control ForEntity">
+                                <label for="txtASTitle"> Authorized Signatory Title </label>
+                                <input type="text" class="form-control" name="ASTitle" placeholder="Title" id="txtASTitle" />
+                            </div>
+
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="chkIsCoInestor"> is Co-Investor required
+                            </label>
+                            <div id="CoinvestorDetails">
+                                <div class="form-group float-label-control">
+                                    <label for="txtInvestorName"> Name </label>
+                                    <input type="text" class="form-control" name="Co-InvestorName" placeholder="Name" id="txtCo-InvestorName" />
+                                </div>
+                                <div class="form-group float-label-control">
+                                    <label for="txtInvestorEMail"> EMail ID </label>
+                                    <input type="text" class="form-control" name="Co-InvestorEMail" placeholder="EMail ID " id="txtCo-InvestorEMail" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input type="button" name="next" class="next action-button" id="Step2Next" value="Next" />
+
+            </fieldset>
+            <fieldset>
+                <h1 class="fs-title">Step 3: Investor Address</h1>
+                <div id="Step3ErrorMessage"> </div>
+                <div class="container">
+                    <div class="row textAlignLeft" style="padding-bottom:15px">
+                        <label> Residing Address</label>
+                        <label id="lblAddressID" style="visibility:hidden"></label>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            @*<div class="col-12 col-md-6 col-lg-3">
+                               <div class="">
+                                   <input type="text" class="form-control" name="InvestorTelephone" placeholder="Country" id="txtRCountry" style="visibility:hidden"/>
+                               </div>
+                            </div>*@
+
+                            <div class="form-group float-label-control">
+                                <label for="txtInvestorName"> Address 1 </label>
+                                <input type="text" class="form-control" name="InvestorName" placeholder="Address 1" id="txtRAddress1" />
+                            </div>
+                            <div class="form-group float-label-control">
+                                <label for="txtInvestorEMail"> City </label>
+                                <input type="text" class="form-control" name="InvestorEMail" placeholder="City " id="txtRCity" />
+                            </div>
+                            <div class="form-group float-label-control w-100" style="padding-left:0 !important">
+                                <label> Country </label>
+                                <select id="drpCountry" name="drpCountry" class="selectpicker darkDropdown-signup" data-width="auto" data-size="5"></select>
+                                @*<input type="text" class="form-control" name="InvestorTelephone" placeholder="Country" id="txtRCountry" style="visibility:hidden"/>*@
+
+                            </div>
+                            <div class="form-group float-label-control">
+                                <label for="txtRTax"> Tax </label>
+                                <input type="text" class="form-control" name="txtRTax" placeholder="Tax" id="txtRTax" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group float-label-control">
+                                <label for="txtInvestorName"> Address 2 </label>
+                                <input type="text" class="form-control" name="InvestorName" placeholder="Address 2" id="txtRAddress2" />
+                            </div>
+                            <div class="form-group float-label-control">
+                                <label for="txtInvestorEMail"> State </label>
+                                <input type="text" class="form-control" name="InvestorEMail" placeholder="State" id="txtRState" />
+                            </div>
+                            <div class="form-group float-label-control">
+                                <label for="txtInvestorTelephone"> ZipCode </label>
+                                <input type="text" class="form-control" name="InvestorTelephone" placeholder="ZipCode" id="txtRZipCode" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row textAlignLeft">
+                        <div class="form-check ">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="chkSameAddress"> Is Same Mailing Address
+                            </label>
+                        </div>
+                    </div>
+                    <div id="ResidingAddressDiv">
+                        <div class="row textAlignLeft" style="padding-bottom:15px">
+                            <label> Mailing Address</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group float-label-control">
+                                    <label for="txtInvestorName"> Full Address </label>
+                                    <input type="text" class="form-control" name="InvestorName" placeholder="Full Address" id="txtFullMailingAddr" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div id="fulladdress">
+                    <div class="row textAlignLeft" style="padding-bottom:15px" >
+                       <label> Mailing Address</label>
+                   </div>
+                   <div class="row">
+                    <div class="col-sm-6">
+                       <div class="form-group float-label-control">
+                           <label  for="txtInvestorName" > Address 1 </label>
+                           <input type="text" class="form-control" name="InvestorName" placeholder="Address 1" id="txtBAddress1" />
+                       </div>
+                       <div class="form-group float-label-control">
+                           <label  for="txtInvestorEMail"> City </label>
+                           <input type="text" class="form-control" name="InvestorEMail" placeholder="City " id="txtBCity" />
+                       </div>
+                       <div class="form-group float-label-control">
+                           <label  for="txtInvestorTelephone"> Country </label>
+                           <input type="text" class="form-control" name="InvestorTelephone" placeholder="Country" id="txtBCountry" />
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <div class="form-group float-label-control">
+                           <label  for="txtInvestorName" > Address 2 </label>
+                           <input type="text" class="form-control" name="InvestorName" placeholder="Address 2" id="txtBAddress2" />
+                       </div>
+                       <div class="form-group float-label-control">
+                           <label  for="txtInvestorEMail"> State </label>
+                           <input type="text" class="form-control" name="InvestorEMail" placeholder="State " id="txtBState" />
+                       </div>
+                       <div class="form-group float-label-control">
+                           <label  for="txtInvestorTelephone"> ZipCode </label>
+                           <input type="text" class="form-control" name="InvestorTelephone" placeholder="ZipCode" id="txtBZipCode" />
+                       </div>
+                   </div>
+                </div>
+                   </div>-->
+                </div>
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input type="button" name="next" class="next action-button" id="Step3Next" value="Next" />
+            </fieldset>
+            <fieldset>
+                <h1 class="fs-title">Step 4: Investor Wire</h1>
+                <!--<h3 class="fs-subtitle">Your presence on the social network</h3>-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-6 col-6" style="text-align: left; font-size: 16px;">
+                            Select Wire Info
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-6 d-flex justify-content-end align-items-end">
+                            <input type="button" id="btnaddWire" name="addWire" onclick="javascript:clearAddWireControls()" class="btn security-btn-primary mr-md-3 mr-lg-3 btn-style" style="color:#fff" value="Add New Wire" data-toggle="modal" data-target="#newWire" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="wireError" class="col-lg-12 col-md-12 col-12" style="text-align: left; font-size: 16px;color:red;">
+                            Select atleast one option
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="divWireGrid" class="divWireGrid">
+
+                        </div>
+                    </div>
+                </div>
+
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input type="submit" name="submit" class="submit action-button" value="Submit" />
+
+
+            </fieldset>
+        </form>
+        <div class="iframe" id="docContainer" style="display:none;">
+            <iframe id="iframeDoc" class="iframe" src="" style="width:100%;height:1000px"></iframe>
+        </div>
+
+        <div class="iframe" id="passBaseContainer" style="display:none;">
+            <iframe id="iframePassBase" class="iframe" src="" style="width:100%;height:1000px"></iframe>
+        </div>
+
+        <div class="docmessage" id="msgContainer" style="display:none;">
+            <h3 id="msgTag">Thanks! You've successfully signed the document. </h3>
+        </div>
+        <input type="hidden" id="hdnCommitment" value="0" />
+        <input type="hidden" id="hdnInvStatus" value="0" />
+        <input type="hidden" id="hdnInvestorID" value="0" />
+        <input type="hidden" id="hdnCommitNew" value="0" />
+        <input type="hidden" id="hdnDocCreatedStatus" value="0" />
+    </section>
+
+</div>
+
+
+
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog " style="min-width: 1000px" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Upload Supporting Documents
+                </h3>
+                @* <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>*@
+            </div>
+            <div class="modal-body">
+                <div id="ng-app" ng-app="app">
+                    <div ng-controller="AppController" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h3>
+                                        Select files
+                                    </h3>
+                                    <div ng-show="uploader.isHTML5">
+                                        <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                                        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                                            Drag & drop here
+                                        </div>
+                                        <!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
+                                        <!-- <div nv-file-drop="" uploader="uploader" options="{ url: '/foo' }">
+                                             <div nv-file-over="" uploader="uploader" over-class="another-file-over-class" class="well my-drop-zone">
+                                                 Another drop zone with its own settings
+                                             </div>
+                                         </div>-->
+                                    </div>
+                                    <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+                                    (OR)
+                                    <br />
+                                    <br />
+                                    <input type="file" nv-file-select="" uploader="uploader" multiple />
+                                    <br />
+                                    <!--Single
+                                    <input type="file" nv-file-select="" uploader="uploader" />-->
+                                </div>
+                                <div class="col-md-9" style="margin-bottom: 40px">
+                                    <h3>
+                                        Upload queue
+                                    </h3>
+                                    <p>
+                                        Queue length: {{ uploader.queue.length }}
+                                    </p>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="50%">
+                                                    Name
+                                                </th>
+                                                <th ng-show="uploader.isHTML5">
+                                                    Size
+                                                </th>
+                                                <th ng-show="uploader.isHTML5">
+                                                    Progress
+                                                </th>
+                                                <th>
+                                                    Status
+                                                </th>
+                                                <th>
+                                                    Actions
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in uploader.queue">
+                                                <td>
+                                                    <strong>{{ item.file.name }}</strong>
+                                                </td>
+                                                <td ng-show="uploader.isHTML5" nowrap>
+                                                    {{ item.file.size/1024/1024|number:2 }} MB
+                                                </td>
+                                                <td ng-show="uploader.isHTML5">
+                                                    <div class="progress" style="margin-bottom: 0;">
+                                                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }">
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-show="item.isSuccess"><i class="fa fa-check"></i></span>
+                                                    <span ng-show="item.isCancel"><i class="fa fa-window-close"></i></span>
+                                                    <span ng-show="item.isError"><i class="fa fa-times"></i></span>
+                                                </td>
+                                                <td nowrap>
+                                                    <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                        <span class="fa fa-upload"></span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                        <span class="fa fa-times"></span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                        <span class="fa fa-trash"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div>
+                                        <div style="padding-bottom:5px;">
+                                            Queue progress:
+                                            <div class="progress" style="">
+                                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()"
+                                                ng-disabled="!uploader.getNotUploadedItems().length">
+                                            <span class="fa fa-upload"></span>Upload all
+                                        </button>
+                                        <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()"
+                                                ng-disabled="!uploader.isUploading">
+                                            <span class="fa fa-times"></span>Cancel all
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()"
+                                                ng-disabled="!uploader.queue.length">
+                                            <span class="fa fa-trash"></span>Remove all
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+
+                <button id="btnCloseUpload" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="Detailid" value="" />
+</div>
+<div class="modal fade bd-example-modal-md custom-modal" id="editWire" tabindex="-1">
+    <div class="modal-dialog modal-md modal-form" role="document">
+        <div class="modal-content" style="width:600px">
+            <div class="modal-header border-0 pt-4 px-4">
+                <h5 class="mb-2">Edit Wire</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><img src="../../../../Content/images/cancel.png" width="20"></span></button>
+            </div>
+            <div id="validateMsgEditWire" class="contactErrorMsg">    </div>
+            <div class="modal-body pt-0 px-4">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Wire Descriptions<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Wire Name" id="txtEditWireDesc" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="usitems">
+                            <div class="form-group">
+                                <label class="d-block mb-0">Wire Type<em id="editWireTypeReq" class="usitems">*</em></label>
+                                <div class="input-group">
+                                    <select id="drpEditWireType" class="form-control darkDropdown">
+                                        <option value="0" title="--Select Wire Type--" selected="selected">--Select Wire Type--</option>
+                                        @foreach (var item in (NameValueList)ViewData["WireList"])
+                                        {
+                                            <option value="@item.Value">@(item.Name)</option>
+
+
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Is US Bank?<em>*</em></label>
+                                <div class="input-group">
+                                    <select id="drpEditIsUSBank" class="form-control darkDropdown">
+                                        <option selected="selected" value="0" title="No">No</option>
+                                        <option value="1" title="Yes">Yes</option>
+
+                                    </select>
+
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Set as Default and Inherit to All Funds?</label>
+                                <div class="input-group">
+                                    <select id="drpEditIsDefault" class="form-control darkDropdown">
+                                        <option selected="selected" value="0" title="No">No</option>
+                                        <option value="1" title="Yes">Yes</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Name of Account<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Account Name" id="txtEditAcctName" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Account Number<em id="editAcctNumReq" class="usitems">*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Account #" id="txtEditAccount" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Name of Bank<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Bank Name" id="txtEditBankName" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0" id="lblRoutingNum">ABA/Routing Number<em id="editABANUmReq" class="usitems">*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter ABA Number" id="txtEditABANumber" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+
+
+
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0" id="lblBankAddr1">Bank Address1</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Bank Address1" id="txtEditBankAddr1" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="nonusitems">
+                            <div class="form-group">
+                                <label class="d-block mb-0" id="lblBankAddr2">Branch address and telephone number</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Branch address and telephone number" id="txtEditBankAddr2" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+
+                    </tr>
+                    <tr style="display:none;">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Account Type</label>
+                                <div class="input-group">
+                                    <select id="drpEditAcctType" class="form-control darkDropdown">
+                                        @foreach (var item in (NameValueList)ViewData["WireAcctList"])
+                                        {
+                                            if (@item.Name == "Savings")
+                                            {
+                                                <option value="@item.Value" selected="Selected">@(item.Name)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Value">@(item.Name)</option>
+                                            }
+
+
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Fund Name</label>
+                                <div class="input-group">
+                                    <select id="drpEditWireFund" class="form-control darkDropdown" disabled="disabled"></select>
+                                </div>
+                            </div>
+                        </td>
+
+
+                    </tr>
+                    <tr class="nonusitems">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Swift Code<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Swift Code" id="txtEditSwift" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">IBAN<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter IBAN" id="txtEditReference" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr class="usitems">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">F/F/C Name</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter F/F/C Name1" id="txtEditName1" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">F/F/C Number</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter F/F/C Number1" id="txtEditNumber1" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr style="display:none;">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">F/F/C Name2</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter F/F/C Name2" id="txtEditName2" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">F/F/C Number2</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter F/F/C Number2" id="txtEditNumber2" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    <tr class="nonusitems">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Bank Number<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Bank Number" id="txtEditBankNumber" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td style="display:none">
+                            <div class="form-group">
+                                <label class="d-block mb-0">Notes</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Notes" id="txtEditNotes" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                </table>
+                <input type="hidden" id="hdnWireID" />
+                <input type="hidden" id="hdnWireFundID" />
+                <input type="hidden" id="hdnwireRecStatus" />
+                <input type="hidden" id="hdnWireInvestorID" />
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-blank mr-md-3 mr-lg-3" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateWire">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-md custom-modal" id="newWire" tabindex="-1">
+    <div class="modal-dialog modal-md modal-form" role="document">
+        <div class="modal-content" style="width:600px">
+            <div class="modal-header border-0 pt-4 px-4">
+                <h5 class="mb-2">Add New Wire</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><img src="../../../../Content/images/cancel.png" width="20"></span></button>
+            </div>
+            <div id="validateMsgNewWire" class="contactErrorMsg">    </div>
+            <div class="modal-body pt-0 px-4">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Wire Descriptions<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Wire Name" id="txtAddWireDesc" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="addusitems">
+                            <div class="form-group">
+                                <label class="d-block mb-0">Wire Type<em id="addWireTypeReq" class="addusitems">*</em></label>
+                                <div class="input-group">
+                                    <select id="drpAddWireType" class="form-control darkDropdown">
+                                        <option value="0" title="--Select Wire Type--" selected="selected">--Select Wire Type--</option>
+                                        @foreach (var item in (NameValueList)ViewData["WireList"])
+                                        {
+                                            <option value="@item.Value">@(item.Name)</option>
+
+
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Is US Bank?<em>*</em></label>
+                                <div class="input-group">
+                                    <select id="drpAddIsUSBank" class="form-control darkDropdown">
+                                        <option selected="selected" value="0" title="No">No</option>
+                                        <option value="1" title="Yes">Yes</option>
+
+                                    </select>
+
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Set as Default and Inherit to All Funds?</label>
+                                <div class="input-group">
+                                    <select id="drpAddIsDefault" class="form-control darkDropdown">
+                                        <option value="0" title="No">No</option>
+                                        <option selected="selected" value="1" title="Yes">Yes</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Name of Account<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Account Name" id="txtAddAcctName" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Account Number<em id="addAcctNumReq" class="addusitems">*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Account #" id="txtAddAccount" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Name of Bank<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Bank Name" id="txtAddBankName" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0" id="lblAddRoutingNum">ABA/Routing Number<em id="addABANUmReq" class="addusitems">*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter ABA Number" id="txtAddABANumber" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0" id="lblAddBankAddr1">Bank Address1</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Bank Address1" id="txtAddBankAddr1" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="addnonusitems">
+                            <div class="form-group">
+                                <label class="d-block mb-0" id="lblAddBankAddr2">Branch address and telephone number</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Branch address and telephone number" id="txtAddBankAddr2" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+
+                    </tr>
+                    <tr style="display:none;">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Account Type</label>
+                                <div class="input-group">
+                                    <select id="drpAddAcctType" class="form-control darkDropdown">
+                                        <option value="0" title="--Select Account Type--" selected="selected">--Select Account Type--</option>
+                                        @foreach (var item in (NameValueList)ViewData["WireAcctList"])
+                                        {
+                                            if (@item.Name == "Savings")
+                                            {
+                                                <option value="@item.Value" selected="Selected">@(item.Name)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Value">@(item.Name)</option>
+                                            }
+
+
+
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Fund Name </label>
+                                <div class="input-group">
+                                    <select id="drpAddWireFund" class="form-control darkDropdown"></select>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr class="addnonusitems">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Swift Code<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Swift Code" id="txtAddSwift" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">IBAN<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter IBAN" id="txtAddReference" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr class="addusitems">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">F/F/C Name</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter F/F/C Name" id="txtAddName1" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">F/F/C Number</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter F/F/C Number" id="txtAddNumber1" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr style="display:none;">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">F/F/C Name2</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter F/F/C Name2" id="txtAddName2" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">F/F/C Number2</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter F/F/C Number2" id="txtAddNumber2" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+
+
+                    <tr class="addnonusitems">
+                        <td>
+                            <div class="form-group">
+                                <label class="d-block mb-0">Bank Number<em>*</em></label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Bank Number" id="txtAddBankNumber" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td style="display:none">
+                            <div class="form-group">
+                                <label class="d-block mb-0">Notes</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="Enter Notes" id="txtAddNotes" class="form-control">
+                                </div>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+
+                </table>
+
+                <input type="hidden" id="hdnAddWireInvestorID" />
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-blank mr-md-3 mr-lg-3" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnAddWire">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .bootstrap-select .dropdown-toggle {
+        border-bottom-color: #aaa !important;
+    }
+
+    #ListHolder {
+        width: 100%;
+        vertical-align: bottom;
+        float: left;
+        text-align: left;
+    }
+
+    .textAlignLeft {
+        text-align: left;
+    }
+
+    .error {
+        z-index: 100;
+        display: block;
+        position: absolute;
+        padding: 2px;
+        background: #F2DEDE;
+        color: black;
+        margin-top: -30px;
+        border: 1px solid red;
+        width: 50%;
+    }
+
+    .arrow-left {
+        width: 0;
+        height: 0;
+        border-top: 13px solid transparent;
+        border-bottom: 13px solid transparent;
+        padding: 0px;
+        border-right: 13px solid red;
+        margin-left: 54%;
+        background: transparent;
+        border-left: 0px;
+    }
+
+    .tblwire {
+        vertical-align: middle;
+        text-align: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .divWireGrid {
+        width: 100%;
+    }
+</style>
+
+
+
+
+@section JsIncludes {
+    @Url.CombresLink("EsignFileUploadJs")
+
+}
+@section CssIncludes {
+    @Url.CombresLink("InvestorPrepopCss")
+}
+<script language="javascript" type="text/javascript">
+
+    function HideSteps() {
+        let chkValue = $("input[name=inlineRadioOptions]:checked").val();
+
+        if (chkValue > 0) {
+            $(".hideStep").hide();
+        }
+        else {
+            $(".hideStep").show();
+        }
+    }
+    $('input[type=radio][name=inlineRadioOptions]').on('change',function () {
+        let chkValue = $("input[name=inlineRadioOptions]:checked").val();
+
+        if (chkValue > 0) {
+            $(".hideStep").hide();
+        }
+        else {
+            $(".hideStep").show();
+        }
+    });
+    function formatSep() {
+        var caret_pos = getcaret_pos();
+        //		    var range = document.selection.createRange();
+        //			var bookmark = range.getBookmark();
+        //			caret_pos = bookmark.charCodeAt(2) - 2;
+        //			caret_pos = window.getSelection().getRangeAt(0).startOffset;
+        var negSign = ""
+
+        var shiftPressed = 0;
+        shiftPressed = event.shiftKey;
+        textBox = document.getElementById("txtCommitAmt");
+        // alert(event.keyCode);
+        if (shiftPressed && event.keyCode == 9) {
+            textBox.select();
+            textBox.focus();
+            //SetCursorPosition(caret_pos);
+        }
+
+        if (event.keyCode != 9 && !(event.keyCode > 34 && event.keyCode < 41) && event.keyCode != 16) {
+            //alert(event.keyCode);
+
+            len = textBox.value.length;
+            textBox.value = textBox.value.replace(/[^-\.\d]/gi, '');
+            var nStr = textBox.value;
+            if (nStr.charAt(0) == "-") {
+                negSign = "-";
+            }
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0]; x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            x1 = x1.replace(/[,.\-+]/g, "");
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            textBox.value = negSign + x1 + x2;
+            //textBox.value = formatCurrency(textBox.value);
+            if (textBox.value.length > len) {
+                len = parseInt(len - 1 / 3) - parseInt(caret_pos / 3);
+                SetCursorPosition(caret_pos + 1);
+            }
+            else {
+                if (textBox.value.length < len) {
+                    SetCursorPosition(caret_pos - 1);
+                }
+                else {
+                    SetCursorPosition(caret_pos);
+                }
+            }
+        }
+    }
+
+    function getcaret_pos() {
+        var isIE = navigator.appName;
+        var index_of_node = 0;
+        if (isIE == "Microsoft Internet Explorer") {
+            var range = document.selection.createRange();
+            var bookmark = range.getBookmark();
+            index_of_node = bookmark.charCodeAt(2) - 2;
+        }
+        else {
+            index_of_node = window.getSelection().getRangeAt(0).startOffset;
+        }
+        return index_of_node;
+    }
+    function SetCursorPosition(pos) {
+        var obj = document.activeElement;
+        if (obj) {
+            var tr = obj.createTextRange();
+            if (obj && tr) {
+                tr.moveStart("character", pos);
+                tr.collapse();
+                tr.select();
+                return true;
+            }
+        }
+        return false;
+    }
+
+	function formatCurrency2() {
+            var textBox = document.getElementById("txtCommitAmt");
+            var val;
+            var strValue = textBox.value;
+            if (strValue != '') {
+                strValue = strValue.toString().replace(/\$|\,/g, '');
+                dblValue = parseFloat(strValue);
+                blnSign = (dblValue == (dblValue = Math.abs(dblValue)));
+                dblValue = Math.floor(dblValue * 100 + 0.50000000001);
+                intCents = dblValue % 100;
+                strCents = intCents.toString();
+                dblValue = Math.floor(dblValue / 100).toString();
+                for (var j = strCents.length; j < 2; j++) {
+                    strCents = "0" + strCents;
+                }
+                for (var i = 0; i < Math.floor((dblValue.length - (1 + i)) / 3); i++) {
+                    dblValue = dblValue.substring(0, dblValue.length - (4 * i + 3)) + ',' + dblValue.substring(dblValue.length - (4 * i + 3));
+                }
+                val=(((blnSign)?'':'-') + dblValue + '.' + strCents);
+
+                textBox.value = (val);
+
+            }
+        };
+
+		function formatCurrency(strValue){
+				strValue = strValue.toString().replace(/\$|\,/g,'');
+				dblValue = parseFloat(strValue);
+
+				blnSign = (dblValue == (dblValue = Math.abs(dblValue)));
+				dblValue = Math.floor(dblValue*100+0.50000000001);
+				intCents = dblValue%100;
+				strCents = intCents.toString();
+				dblValue = Math.floor(dblValue/100).toString();
+                for (var j = strCents.length; j < 2; j++) {
+                    strCents = "0" + strCents;
+                }
+				for (var i = 0; i < Math.floor((dblValue.length-(1+i))/3); i++){
+					dblValue = dblValue.substring(0,dblValue.length-(4*i+3))+','+ dblValue.substring(dblValue.length-(4*i+3));
+				}
+				return (((blnSign)?'':'-') + dblValue + '.' + strCents);
+			}
+
+    var InvestorDetailsURL = "/ESignDocuments/ESignDocuments/GetInvestorDetails"
+    var PrepopulateInvestorPOSTURL = "/ESignDocuments/ESignDocuments/PrepopulateInvestorPOST"
+    var PreCreatePOSTURL = "/ESignDocuments/ESignDocuments/PreCreateDocument"
+
+ var InvestorID = getQueryStringValue("InvestorID");
+    if (InvestorID != '' && InvestorID != '0') {
+var Model;
+         $.ajax({
+             type: "GET",
+             url: InvestorDetailsURL,
+             data: {"InvestorID": InvestorID },
+             success: function(response){
+	     Model = response;
+                 if (Model.InvestorStatus == 'Verified') {
+                     //}
+	      $('#msform').hide();
+
+            $('#msgTag').html("Document generation is in progress. Please wait for few seconds and do not refresh/leave the page.");
+            $('#msgContainer').show();
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ "Details": Model, "param": window.location.search }),
+            url: PrepopulateInvestorPOSTURL,
+            contentType: "application/json"
+        }).done(function (res) {
+                if (res.status == true) {
+                $('#msform').hide();
+                $('#msgContainer').hide();
+$('#divEarlyIQPopup').hide();
+			$('#docContainer').show();
+			$('#iframeDoc').attr('src',res.message);
+            //window.location.href = res;
+
+			setTimeout(function () {
+                            RefreshPartial();
+                        }, 60000);
+
+            }
+                else {
+$('#divEarlyIQPopup').hide();
+$('#msgContainer').hide();
+ $('#msform').show();
+
+			if (res.message != "" && res.message != null) { alert(res.message); }
+
+
+                    else { alert("Error occurred while processing the document"); }
+			}
+            //window.location.href = res;
+        });
+                 }
+                 else {
+                     $('#msform').hide();
+                     var EarlyIQURL = "https://dev.earlyiq.com/partner/Oxygen/cert/getstarted?page_template=modal";
+                     var EFirstName = "&first_name=" + Model.FirstName;
+                     var ELastName = "&last_name=" + Model.LastName;
+                     var EEmail = "&email=" + encodeURIComponent(Model.EMail);
+                     var EIndividualType = "&type=oxygen-inv-001";
+                     var EEntityType = "&type=oxygen-bizinv-001";
+                     var EApiKey = "&api_key1=2aaeVjaG2nxPsj6Vrr6pim1ewwAGo5FLePWsHn6mgQA%3D";
+                     var EPassword = "&no_password=1";
+                     var tempssn = Model.TaxID;
+		   if(tempssn != null){
+                     tempssn = tempssn.replace(/-/g, "")
+		}
+                     var Essn = "&ssn=" + btoa(tempssn);
+                     var ECompanyID = "&companyID=" + Model.InvestorID;
+                     var ECompanyName = "&company_name=" + encodeURIComponent(Model.FirstName);
+                     var EEmail = "&email=" + Model.EMail;
+                    // Model.InvestorID = res.message;
+                     $('#hdnInvestorID').val(InvestorID);
+                     //ECompanyID = "&companyID=" + InvestorID;
+                     //alert(Model.InvestorID);
+                     if ( Model.InvestorType == 'Entity') {
+                         $.ajax({
+                             url: "/ESignDocuments/ESignDocuments/GetCurrentUserDetails", // Controller and method name
+                             dataType: "json", // return type
+                             type: "GET", // Get Request
+                             contentType: "application/json; charset=utf-8", //defines the contentType of the request
+                             cache: false,
+                             data: "{}", // input parameters
+                             global: false,
+                             success: function (userData) {
+                                 if (userData != null) {
+                                     EFirstName = "&first_name=" + userData.FirstName;
+                                     ELastName = "&last_name=" + userData.LastName;
+                                     EFinalURL = EarlyIQURL + EEmail + EFirstName + ELastName + EEntityType + EApiKey + EPassword + ECompanyID + ECompanyName;
+                                     $('#getstarted').attr('data-iframe-src', EFinalURL);
+                                     $('#divEarlyIQPopup').show();
+                                 }
+                                 else {
+                                     ELastName = "&last_name=LLC";
+                                     EFinalURL = EarlyIQURL + EEmail + EFirstName + ELastName + EEntityType + EApiKey + EPassword + ECompanyID + ECompanyName;
+                                     $('#getstarted').attr('data-iframe-src', EFinalURL);
+                                     $('#divEarlyIQPopup').show();
+                                 }
+                             }
+                         });
+                     }
+                     else if (Model.InvestorType == 'Individual') {
+                         EFinalURL = EarlyIQURL + EEmail + EFirstName + ELastName + EIndividualType + EApiKey + EPassword + Essn+"&country=US";
+                         $('#getstarted').attr('data-iframe-src', EFinalURL);
+                         $('#divEarlyIQPopup').show();
+                     }
+                     getEarlyIQPopupStatus();
+                 }
+	     }
+	     });
+
+
+    }
+    function getEarlyIQPopupStatus() {
+        if (EIQcommand == "close") {
+            //alert(EIQmessage);
+	    if(EIQmessage =="complete")
+	    {
+	    $.ajax({
+                    url: "/ESignDocuments/ESignDocuments/UpdateEarlyIQStatus", // Controller and method name
+                    dataType: "json", // return type
+                    type: "POST", // Get Request
+                    contentType: "application/json; charset=utf-8", //defines the contentType of the request
+                    cache: false,
+                    data: JSON.stringify({  "investorID": $('#hdnInvestorID').val(), "status": EIQmessage}), // input parameters
+                    global: false,
+                    success: function (data) {
+                    }
+                });
+            $('#msgTag').html("EarlyIQ Verification In Progress. Verification status will be notified in 2 business days.");
+	   $("#msgContainer").append("<br/> <a style='margin-top:10%;width:20%;margin-bottom:20px;color:#fff'  class='btn security-btn-primary mr-md-3 mr-lg-3 btn-style' title='Bypass Verification' id='btnVerify' onclick='updateVerify()'>Bypass Verification</a>");
+	    $('#divEarlyIQPopup').hide();
+	    $('#msgContainer').show();
+	    }
+	    else
+	    {
+	    $('#msgTag').html("You haven't provided investor verification details. Please try again.");
+	    $('#divEarlyIQPopup').show();
+	    $('#msgContainer').hide();
+	    }
+
+        }
+        else {
+            //this will wait 4 seconds and then fire the load partial function
+            setTimeout(function () {
+                //recall this function so that it will continue to loop
+                getEarlyIQPopupStatus();
+            }, 4000);
+        }
+    }
+
+$('input[type=radio][name=InvestorTypeRadioOptions]').change(function() {
+    if (this.value == 'Individual') {
+    //$('#lblFirstName').text('First Name');
+        $('#divLastName').show();
+        $('#divFirstName').show();
+        $('.ForEntity').hide();
+    }
+    else if (this.value == 'Entity') {
+   // $('#lblFirstName').text('Entity Name');
+        $('#divLastName').hide();
+        $('#divFirstName').hide();
+        $('.ForEntity').show();
+    }
+});
+    $('#btnCloseUpload').on('click', function(event) {
+         $('#myModal').modal('toggle');
+    });
+    function updateVerify(){
+        $.ajax({
+            url: "/ESignDocuments/ESignDocuments/UpdateVerifyStatus", // Controller and method name
+            dataType: "json", // return type
+            type: "POST", // Get Request
+            contentType: "application/json; charset=utf-8", //defines the contentType of the request
+            cache: false,
+            data: JSON.stringify({ "investorID": $('#hdnInvestorID').val() }), // input parameters
+            global: false,
+            success: function (data) {
+                alert("Bypass Verification Done Successfully");
+            }
+        });
+    }
+
+
+$(window).keydown(function(event){
+
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+    $(".header-select-list li").hide();
+    $('#lblSectionName').text("Investor Details");
+    $('#ajaxBusy').hide();
+    var ListOfInvestors = @Html.Raw(Json.Encode(Model.Investors));
+     var InputTag = "";
+    var EIQcommand;
+    var EIQmessage;
+    var InvetorNamectrl, InvestorMailCtrl, InvestorTaxCtrl, InvestorPhoneCtrl, InvetorLastNamectrl, InvetorStatusctrl, InvetorFirstNamectrl,InvestorCmtAmtctrl;
+    var isNewInvestorEnable = 0;
+    for (i = 0; i < ListOfInvestors.length; i++) {
+        if (ListOfInvestors[i].InvestorName == "New Investor") {
+            isNewInvestorEnable = 0;
+	            InputTag += '<div class="form-check"><label class="form-check-label"><input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio"'+ListOfInvestors[i].InvestorID+' value="'+ListOfInvestors[i].InvestorID+'"> '+ ListOfInvestors[i].InvestorName+' </label></div>'
+		    $('#hdnCommitNew').val(ListOfInvestors[i].CurrStatus);
+        }
+        else {
+        if (ListOfInvestors[i].CurrStatus == 1) {
+        InputTag += '<div class="form-check"><label class="form-check-label"><input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio"'+ListOfInvestors[i].InvestorID+' value="'+ListOfInvestors[i].InvestorID+'"> '+ ListOfInvestors[i].InvestorName+' <span class="badge badge-warning">New</span></label></div>'
+        }
+	 else if (ListOfInvestors[i].CurrStatus == 2) {
+        InputTag += '<div class="form-check"><label class="form-check-label"><input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio"'+ListOfInvestors[i].InvestorID+' value="'+ListOfInvestors[i].InvestorID+'"> '+ ListOfInvestors[i].InvestorName+' <span class="badge badge-primary">Available</span></label></div>'
+        }
+	else if (ListOfInvestors[i].CurrStatus == 3) {
+        InputTag += '<div class="form-check"><label class="form-check-label"><input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio"'+ListOfInvestors[i].InvestorID+' value="'+ListOfInvestors[i].InvestorID+'"> '+ ListOfInvestors[i].InvestorName+' <span class="badge badge-success">Resume</span></label></div>'
+        }
+	else if (ListOfInvestors[i].CurrStatus == 4) {
+            InputTag += '<div class="form-check"><label class="form-check-label"><input disabled class="form-check-input" type="radio" name="inlineRadioOptions" id="radio"' + ListOfInvestors[i].InvestorID + ' value="' + ListOfInvestors[i].InvestorID + '"> ' + ListOfInvestors[i].InvestorName +' <span class="badge badge-info">Signed by investor & Waiting for approval</span></label></div>'
+        }
+        else if (ListOfInvestors[i].CurrStatus == 5) {
+        InputTag += '<div class="form-check"><label class="form-check-label"><input disabled class="form-check-input" type="radio" name="inlineRadioOptions" id="radio"'+ListOfInvestors[i].InvestorID+' value="'+ListOfInvestors[i].InvestorID+'"> '+ ListOfInvestors[i].InvestorName+' <span class="badge badge-danger">Completed</span></label></div>'
+        }
+        else {
+                        InputTag += '<div class="form-check"><label class="form-check-label"><input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio"'+ListOfInvestors[i].InvestorID+' value="'+ListOfInvestors[i].InvestorID+'"> '+ ListOfInvestors[i].InvestorName+' <span class="badge badge-primary">Available</span></label></div>'
+            }
+        }
+
+    }
+    if (isNewInvestorEnable == 1) {
+        $('#divaddinv').hide();
+    }
+    else {
+        $('#divaddinv').hide();
+    }
+    $("#ListHolder").append(InputTag);
+    $('#chkSameAddress').click(function() {
+        if ($(this).is(':checked')) {
+            $("#ResidingAddressDiv").hide(1000);
+        }
+        else{
+            $("#ResidingAddressDiv").show(1000);
+        }
+    });
+    $("#CoinvestorDetails").hide();
+    $('#chkIsCoInestor').click(function() {
+        if ($(this).is(':checked')) {
+            $("#CoinvestorDetails").show(1000);
+        }
+        else{
+            $("#CoinvestorDetails").hide(1000);
+        }
+    });
+
+
+$(function() {
+$('select#drpCountry').LoadJsonFrom('EsignDocuments/EsignDocuments/getCountry');
+    $('select#drpInvDomicile').LoadJsonFrom('EsignDocuments/EsignDocuments/GetInvDomicile');
+   // $('select#drpCoInvestor').LoadJsonFrom('EsignDocuments/EsignDocuments/getCoInvestor');
+
+var current_fs, next_fs, previous_fs; //fieldsets
+var left, opacity, scale; //fieldset properties which we will animate
+var animating; //flag to prevent quick multi-click glitches
+var step1ErrorLabel,step2ErrorLabel,step3ErrorLabel;
+var CurrentObject;
+    var RAddress1, RAddress2, RCity, RState, RCountry, RZip, MAddress1, MAddress2, MCity, MState, MCountry, MZip, isSame, AddressID, RInvDomicile, RCoInvestor;
+var isCoInvestor, CoinvestorName, CoinvestorMail;
+var InvestorType,InvestorTitlectrl,RASContact,ASFirstName,ASLastName,ASTitle;
+    InvetorNamectrl = $("#txtInvestorName");
+    InvetorFirstNamectrl = $("#txtInvestorFirstName");
+    InvetorLastNamectrl = $("#txtInvestorLastName");
+    InvetorStatusctrl=$("txtInvestorStatus");
+    InvestorMailCtrl = $("#txtInvestorEMail");
+    InvestorCmtAmtctrl = $("#txtCommitAmt");
+InvestorTaxCtrl = $("#txtInvestorTaxID");
+InvestorPhoneCtrl = $("#txtInvestorTelephone");
+AddressID = $("#lblAddressID");
+RAddress1 = $("#txtRAddress1");
+RAddress2 = $("#txtRAddress2");
+RCity = $("#txtRCity");
+RState = $("#txtRState");
+RCountry = $("#drpCountry");
+    RInvDomicile = $("#drpInvDomicile");
+    //RCoInvestor = $("#drpCoInvestor");
+RZip = $("#txtRZipCode");
+MAddress1 = $("#txtBAddress1");
+MAddress2 = $("#txtBAddress2");
+MCity = $("#txtBCity");
+MState = $("#txtBState");
+MCountry = $("#txtBCountry");
+MZip = $("#txtBZipCode");
+isSame = $('#chkSameAddress');
+isCoInvestor     = $('#chkIsCoInestor');
+CoinvestorName = $('#txtCo-InvestorName');
+CoinvestorMail = $('#txtCo-InvestorEMail');
+InvestorType=$("input[name=InvestorTypeRadioOptions]");
+    InvestorTitlectrl = $("#txtInvestorTitle");
+$("#Step2Next").click(function(){
+    if(animating) return false;
+    animating = true;
+    CurrentObject = this;
+    var ValidForm = true;
+    var ValidationMessage="";
+        var isRoleChecked = $("input[name=InvestorTypeRadioOptions]:checked").val();
+    step2ErrorLabel =  $("#Step2ErrorMessage");
+    if(!InvestorMailCtrl.ValidEmail("Please Enter Valid Email Address"))
+        ValidForm = false;
+    if(!InvetorNamectrl.Required( "Please Enter A Investor Name")  && !InvetorNamectrl.prop('disabled'))
+          ValidForm = false;
+	if(isRoleChecked !='Entity')
+	{
+    if(!InvetorLastNamectrl.Required( "Please Enter A Investor Last Name")  && !InvetorLastNamectrl.prop('disabled'))
+            ValidForm = false;
+        if (!InvetorFirstNamectrl.Required("Please Enter A Investor First Name") && !InvetorFirstNamectrl.prop('disabled'))
+            ValidForm = false;
+    }
+    //if (!InvestorTaxCtrl.prop('disabled')) {
+     //   if (!InvestorTaxCtrl.Required("Please Enter Valid Tax/SSN Id"))
+     //       ValidForm = false;
+    //    else {
+     //       if (isRoleChecked != 'Entity') {
+    //            if (!InvestorTaxCtrl.ValidIndTaxID("Please Enter Tax/SSN Id in XXX-XX-XXXX format"))
+    //                ValidForm = false;
+    //        }
+    //        else {
+    //            if (!InvestorTaxCtrl.ValidBusTaxID("Please Enter Tax/SSN Id in XX-XXXXXXX format"))
+    //                ValidForm = false;
+    //        }
+   //     }
+
+
+   // }
+    if (!InvestorCmtAmtctrl.prop('disabled')) {
+        if (!InvestorCmtAmtctrl.Required("Please Enter Valid Commitment Amount"))
+            ValidForm = false;
+        else {
+           if(!InvestorCmtAmtctrl.ValidAmount("Please Enter Valid Commitment Amount"))
+	   {
+	   ValidForm = false;
+	   }
+
+        }
+
+
+    }
+    if(!InvestorPhoneCtrl.Required("Please Enter Valid Phone Number"))
+         ValidForm = false;
+    if(!InvestorType.RadioRequired())
+        ValidForm = false;
+    if (!RInvDomicile.DrpDwnRequired("Please Select a Domicile"))
+        ValidForm = false;
+    if (isCoInvestor.is(':checked')) {
+        //if (!RCoInvestor.DrpDwnRequired("Please Select a Co-Investor"))
+           // ValidForm = false;
+	   if(!CoinvestorName.Required( "Please Enter A Name"))
+            ValidForm = false;
+        if(!CoinvestorMail.ValidEmail("Please Enter Valid Email Address"))
+            ValidForm = false;
+    }
+    if(!ValidForm)
+    {
+        animating = false;
+    }
+    else{
+        var isChecked = $("input[name=inlineRadioOptions]:checked").val()
+        if(isChecked <= 0)
+        {
+            chkAccountExists(InvetorNamectrl.val(),InvestorTaxCtrl.val(),CurrentObject)
+        }
+        else
+        {
+            PreCreateDocument();
+            animating = false;
+            nextstep1(CurrentObject);
+        }
+    }
+});
+
+function chkAccountExists(legalname,taxid,CurrentObject)
+{
+var url = '/Common/Account/CheckAccountExists';
+     $.ajax({
+            type: "POST",
+            data: JSON.stringify({ "legalName": legalname, "taxID": taxid }),
+            url: url,
+            contentType: "application/json",
+            success: function(res){
+                if(res.status)
+                {
+                    animating = false;
+                    alert("Investor name/ Tax ID already exists");
+                }
+                else{
+                    animating = false;
+                    PreCreateDocument();
+                    nextstep1(CurrentObject);
+                }
+            },
+            error: function(s){
+
+            }
+            });
+}
+
+$("#Step1Next").click(function(){
+if(animating) return false;
+animating = true;
+CurrentObject = this;
+step1ErrorLabel = $("#Step1ErrorMessage");
+var isChecked = $("input[name=inlineRadioOptions]:checked").val();
+
+    if (!isChecked) {
+        animating = false;
+        step1ErrorLabel.html('<div  style="color:Red">Please select an investor to continue</div>');
+    } else if (isChecked == 0) {
+        $(".error").parent().find('.error').remove();
+        InvetorNamectrl.val("").trigger("change");
+        InvestorMailCtrl.val("").trigger("change");
+        InvestorCmtAmtctrl.val("").trigger("change");
+        InvestorTaxCtrl.val("").trigger("change");
+        InvestorPhoneCtrl.val("").trigger("change");
+        InvetorStatusctrl.val("").trigger("change");
+        InvetorLastNamectrl.val("").trigger("change");
+        InvetorFirstNamectrl.val("").trigger("change");
+        InvetorNamectrl.prop("disabled", false);
+        InvestorTaxCtrl.prop("disabled", false);
+        InvetorLastNamectrl.prop("disabled", false);
+        InvetorFirstNamectrl.prop("disabled", false);
+        InvestorTitlectrl.val("").trigger("change");
+        $('input[name=InvestorTypeRadioOptions]').attr('disabled', false);
+        AddressID.text("0");
+        RAddress1.val("").trigger("change");
+        RAddress2.val("").trigger("change");
+        RCity.val("").trigger("change");
+        RState.val("").trigger("change");
+        RCountry.val("0").trigger("change");
+        RInvDomicile.prop("disabled", false);
+        $('select#drpInvDomicile option:first-child').attr("selected", "selected");
+        //RInvDomicile.val("0").trigger("change");
+        RZip.val("").trigger("change");
+        isSame.prop('checked', true);
+        $("#ResidingAddressDiv").hide(1000);
+        $('#txtFullMailingAddr').val("").trigger("change");
+        isCoInvestor.prop('checked', false);
+        //RCoInvestor.val("0").trigger("change");
+        CoinvestorName.val("").trigger("change");
+        CoinvestorMail.val("").trigger("change");
+        $("#CoinvestorDetails").hide();
+        $('#hdnInvStatus').val("");
+        $('input[name=InvestorTypeRadioOptions][value=Individual]').prop('checked', true);
+        // $('#lblFirstName').text('First Name');
+        $('#divLastName').show();
+        $('#divFirstName').show();
+        $('.ForEntity').hide();
+        var options = '<option value="-1">Others</option>';
+        $('#drpASContact').html(options);
+        if ($('#hdnCommitNew').val() == null || $('#hdnCommitNew').val() == "" || $('#hdnCommitNew').val() == "0.0000" || $('#hdnCommitNew').val() == "0.00") {
+            InvestorCmtAmtctrl.prop("disabled", false);
+        }
+        else {
+            InvestorCmtAmtctrl.prop("disabled", true);
+            InvestorCmtAmtctrl.val(formatCurrency($('#hdnCommitNew').val())).trigger("change");
+        }
+        step1ErrorLabel.html('');
+        animating = false;
+        nextstep1(CurrentObject);
+    }
+    else {
+        $(".error").parent().find('.error').remove();
+        step1ErrorLabel.empty();
+        if (isChecked == 0) {
+            $.ajax({
+                type: "GET",
+                url: InvestorDetailsURL,
+                data: { "InvestorID": $("input[name=inlineRadioOptions]:checked").val() },
+                success: function (response) {
+                    if (response.InvestorStatus == "Resume") {
+                        var FundIDCurrent = response.FundID;
+                        var IsDocGroup = response.IsDocGroup;
+                        var docID = response.DocID;
+                        if (IsDocGroup > 0) {
+                            docID = IsDocGroup;
+                            IsDocGroup = 1;
+
+                        }
+                        var redirectURL = "https://localhost:62417/ESignDocuments/ESignDocuments/ESigner?fundid=" + FundIDCurrent + "&DocumentID=" + docID + "&Role=Investor&IsDocGroup=" + IsDocGroup + "&EnableRejection=0";
+                        window.open(redirectURL, "_self");
+                    }
+                    else {
+                        InvetorNamectrl.val(response.Name).trigger("change");
+                        InvestorMailCtrl.val(response.EMail).trigger("change");
+                        InvestorCmtAmtctrl.val(formatCurrency(response.Commitment)).trigger("change");
+                        InvestorTaxCtrl.val(response.TaxID).trigger("change");
+                        InvestorPhoneCtrl.val(response.Telephone).trigger("change");
+                        InvetorStatusctrl.val(response.InvestorStatus).trigger("change");
+                        InvetorLastNamectrl.val(response.LastName).trigger("change");
+                        InvetorFirstNamectrl.val(response.FirstName).trigger("change");
+                        InvestorTitlectrl.val(response.title).trigger("change");
+                        if (response.InvestorType != 'NoData') {
+                            $('input[name=InvestorTypeRadioOptions][value=' + response.InvestorType + ']').prop('checked', true);
+                            $('input[name=InvestorTypeRadioOptions]').attr('disabled', true);
+                            if (response.InvestorType == 'Entity') {
+                                //$('#lblFirstName').text('Entity Name');
+                                $('#divLastName').hide();
+                                $('#divFirstName').hide();
+                                $('.ForEntity').show();
+                            }
+                            else {
+                                //$('#lblFirstName').text('First Name');
+                                $('#divLastName').show();
+                                $('#divFirstName').show();
+                                $('.ForEntity').hide();
+                            }
+                        }
+                        else {
+                            $('input[name=InvestorTypeRadioOptions]').attr('disabled', false);
+                        }
+                        $('#hdnCommitment').val(response.Commitment);
+                        $('#hdnInvStatus').val(response.InvestorStatus);
+                        if (isChecked < 0) {
+                            InvetorNamectrl.prop("disabled", false);
+                            InvestorTaxCtrl.prop("disabled", false);
+
+
+
+
+                        }
+                        else {
+                            InvetorNamectrl.prop("disabled", true);
+                            //InvetorLastNamectrl.prop("disabled", true);
+                            //InvetorFirstNamectrl.prop("disabled", true);
+                            if (response.TaxID == null || response.TaxID == "")
+                                InvestorTaxCtrl.prop("disabled", false);
+                            else
+                                InvestorTaxCtrl.prop("disabled", true);
+                            if (response.Commitment == null || response.Commitment == "" || response.Commitment == "0.0000" || response.Commitment == "0.00")
+                                InvestorCmtAmtctrl.prop("disabled", false);
+                            else
+                                InvestorCmtAmtctrl.prop("disabled", true);
+                        }
+                        // var val =$("#drpInvDomicile option")[0].value
+                        //RInvDomicile.val(val).trigger("change");
+
+                        if (response.InvestorDomicile != 0 && response.InvestorDomicile != null && response.InvestorDomicile != "") {
+                            RInvDomicile.prop("disabled", true);
+                            RInvDomicile.val(response.InvestorDomicile).trigger("change");
+
+
+                        }
+                        else {
+
+                            //$('select#drpInvDomicile option:first-child').attr("selected", "selected");
+                            RInvDomicile.val("0").trigger("change");
+                            RInvDomicile.prop("disabled", false);
+                        }
+
+
+                        if (response.ResidingAddress) {
+                            AddressID.text(response.ResidingAddress.AddressID);
+                            RAddress1.val(response.ResidingAddress.Address1).trigger("change");
+                            RAddress2.val(response.ResidingAddress.Address2).trigger("change");
+                            RCity.val(response.ResidingAddress.City).trigger("change");
+                            RState.val(response.ResidingAddress.State).trigger("change");
+                            RCountry.val(response.ResidingAddress.Country).trigger("change");
+                            RZip.val(response.ResidingAddress.ZipCode).trigger("change");
+
+                        }
+                        if (response.isMailing) {
+                            //isSame.prop('checked', true);
+                            isSame.trigger('click');
+                        }
+                        else if (response.MailingAddress) {
+                            if (response.MailingAddress.SingleAddress) {
+                                $('#txtFullMailingAddr').val(response.MailingAddress.SingleAddress).trigger("change");
+                            }
+                @*MAddress1.val(response.MailingAddress.Address1).trigger("change");
+                MAddress2.val(response.MailingAddress.Address2).trigger("change");
+                MCity.val(response.MailingAddress.City).trigger("change");
+                MState.val(response.MailingAddress.State).trigger("change");
+                MCountry.val(response.MailingAddress.Country).trigger("change");
+                MZip.val(response.MailingAddress.ZipCode).trigger("change");*@
+                        }
+                        $('#txtFullMailingAddr').val(response.MailingAddress.SingleAddress).trigger("change");
+                        $('#divWireGrid').empty();
+                        if (response.investorWireInfoList) {
+                            var i;
+                            var wiredetaildata = "";
+
+                            var wiredata = '<table class="tblwire"><th>Select</th>' +
+                                '<th>Wire Details</th>' +
+                                '<th>Is Default</th>' +
+                                '<th>Fund Name</th>' +
+                                '<th>Action</th>';
+
+                            for (i = 0; i < response.investorWireInfoList.length; i++) {
+                                wiredetaildata = 'WiringTitle: ' + response.investorWireInfoList[i].WiringTitle + '<br/>Account Number: ' + response.investorWireInfoList[i].AccountNumber + '<br/>ABA Number: ' + response.investorWireInfoList[i].ABANumber;
+                                wiredata = wiredata + '<tr><td><input  type="radio" name="wireRadioOptions" id="wire' + response.investorWireInfoList[i].wireID + '" value = "' + response.investorWireInfoList[i].wireID + '" > </td><td>';
+                                wiredata = wiredata + wiredetaildata + '</td><td>';
+                                if (response.investorWireInfoList[i].IsDefault == 1) {
+                                    wiredata = wiredata + '<input type="checkbox" checked="checked" disabled="disabled"></td><td>';
+                                }
+                                else {
+                                    wiredata = wiredata + '<input type="checkbox" disabled="disabled"></td><td>';
+                                }
+
+                                wiredata = wiredata + response.investorWireInfoList[i].FundName + '</td><td>';
+                                wiredata = wiredata + '<input type="button" class="btn btn-primary" Value="Edit" onclick="javascript:EditWire(' + response.investorWireInfoList[i].wireID + ',' + response.investorWireInfoList[i].wireRecStatus + ',' + response.investorWireInfoList[i].AccountID + ')" data-toggle="modal" data-target="#editWire"/></td></tr>';
+                            }
+                            wiredata = wiredata + '<tr><td><input  type="radio" name="wireRadioOptions" id="wire0" value="0"></td><td>Wire details will be provided later</td><td></td><td></td> <td></td> </tr> ';
+                            $('#divWireGrid').append(wiredata);
+                        }
+                        if (response.ASContactList) {
+                            var obj = $('#drpASContact');
+                            var options = '';
+                            for (i = 0; i < response.ASContactList.length; i++) {
+                                var fullname = response.ASContactList[i].ASFirstName + " " + response.ASContactList[i].ASLastName;
+
+                                options += '<option value="' + response.ASContactList[i].ASContactID + '">' + fullname + '</option>';
+
+                                if (response.ASContactList[i].ASContactID == response.ASContactID) {
+                                    $('#txtASFirstName').val(response.ASContactList[i].ASFirstName);
+                                    $('#txtASLastName').val(response.ASContactList[i].ASLastName);
+                                    $('#txtASTitle').val(response.ASContactList[i].ASTitle);
+                                    $('#txtASFirstName').prop("disabled", true);
+                                    $('#txtASLastName').prop("disabled", true);
+                                    $('#txtASTitle').prop("disabled", true);
+
+                                }
+
+
+                            }
+                            options = options + '<option value="-1">Others</option>';
+                            obj.html(options);
+
+                            $('#drpASContact option').prop('selected', true);
+                            $('.selectpicker').selectpicker('refresh');
+                        }
+                        else {
+                            var obj = $('#drpASContact');
+                            var options = '<option value="-1">Others</option>';
+                            obj.html(options);
+
+                            $('#drpASContact option').prop('selected', true);
+                            $('.selectpicker').selectpicker('refresh');
+                            $('#txtASFirstName').val('');
+                            $('#txtASLastName').val('');
+                            $('#txtASTitle').val('');
+                            $('#txtASFirstName').prop("disabled", false);
+                            $('#txtASLastName').prop("disabled", false);
+                            $('#txtASTitle').prop("disabled", false);
+
+                        }
+                        step1ErrorLabel.html('');
+                        animating = false;
+                        nextstep1(CurrentObject);
+                    }
+                }
+            });
+        }
+        else {
+            animating = false;
+            let current_fs = $(this).parent();
+            current_fs.hide();
+            $("#Step3Next").trigger("click");
+        }
+     }
+
+});
+    //Passbase API code insertion
+$(".submit").click(function(){
+window.scrollTo(0, 0);
+    var isRoleChecked = $("input[name=InvestorTypeRadioOptions]:checked").val();
+    var ValidForm = true;
+    if ($("input[name=wireRadioOptions]:checked").val() == undefined) {
+        $("#wireError").show();
+        ValidForm = false;
+    }
+    else {
+        $("#wireError").hide();
+    }
+
+    if(ValidForm)
+    {
+        window.scrollTo(0, 0);
+        var EnablePassBaseAPIVerification = '@System.Configuration.ConfigurationManager.AppSettings["EnablePassBaseAPIVerification"]';
+        var DocumentGeneration = false;
+        //Check Passbase API user verification is enabled or not
+        if (EnablePassBaseAPIVerification) {
+            $("#passBaseContainer").show();
+            $('iframePassBase').src("~/Content/TextContent/PassbaseAPI.html");
+
+            DocumentGeneration = true;
+            //After checking status for approe/decline status using webhook, hide the iframe container
+        }
+        else {
+            DocumentGeneration = true;
+        }
+        if (DocumentGeneration) {
+            $('#msform').hide();
+            $('#msgTag').html("Document generation is in progress. Please wait for few seconds and do not refresh/leave the page.");
+            $('#msgContainer').show();
+            LoadDocument();
+        }
+
+    }
+    return false;
+});
+    //Called when webhook event fires => Send identity access key to Passbase API to get verification status = Approved or declined
+    //header is mandatoy (X-API-KEY)
+    const sendAuthKeyToBackend = (identityAccessKey) => {
+        const passBaseAPIURL = "https://api.passbase.com/verification/v1/identities/" + identityAccessKey;
+        const secretAPIKey = '@System.Configuration.ConfigurationManager.AppSettings["SecretKeyPassBaseAPI"]';
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                'X-API-KEY': secretAPIKey
+            },
+        };
+        $.ajax({
+            url: passBaseAPIURL,
+            type: "GET",
+            dataType: "json",
+            headers: {
+                'X-API-KEY': 'oYPucucmkSmMM2iU9Dy1eNJKdGZdBCvVsNVdxHHFqc2H5BOP20dB5C1416uFvss7HZEGjQCls3ReGSfnogpDOOJkIu4njSDzNs0O4NvVy9k9Q4otCg7Ph77mAliSUIRb'
+            },
+            success: function (result) {
+                console.log("Return response:", result);
+            },
+            error: function (result) {
+                alert("some thing  error while fecteching", result);
+            }
+        });
+
+    };
+
+    $("#Step3Next").click(function () {
+        $("#wireError").hide();
+        window.scrollTo(0, 0);
+        let investorID = $("input[name=inlineRadioOptions]:checked").val()
+        if (investorID == 0) {
+
+
+            var ValidForm = true;
+            if (!RAddress1.Required("Please Enter A Valid Address"))
+                ValidForm = false;
+            //if(!RState.Required( "Please Enter A Valid State"))
+            //    ValidForm = false;
+    @*if(!RCountry.Required( "Please Enter A Valid Country"))
+        ValidForm = false;*@
+            if (!RZip.Required("Please Enter A Valid Zipcode"))
+                ValidForm = false;
+            if (!RCity.Required("Please Enter A Valid City"))
+                ValidForm = false;
+            if (!isSame.is(':checked')) {
+                if (!$('#txtFullMailingAddr').Required("Please Enter A Valid Address"))
+                    ValidForm = false;
+        @*if(!MAddress1.Required( "Please Enter A Valid Address"))
+            ValidForm = false;
+        if(!MCity.Required( "Please Enter A Valid City"))
+            ValidForm = false;
+        if(!MState.Required( "Please Enter A Valid State"))
+            ValidForm = false;
+        if(!MCountry.Required( "Please Enter A Valid Country"))
+            ValidForm = false;
+        if(!MZip.Required("Please Enter A Valid Zipcode"))
+            ValidForm = false;*@
+            }
+
+            if (ValidForm) {
+
+
+                debugger;
+                var isRoleChecked = $("input[name=InvestorTypeRadioOptions]:checked").val();
+                var RAddress = { "AddressID": AddressID.text(), "Address1": RAddress1.val(), "Address2": RAddress2.val(), "City": RCity.val(), "State": RState.val(), "Country": RCountry.val(), "ZipCode": RZip.val(), "SingleAddress": "" };
+                var MAddress = { "Address1": "", "Address2": "", "City": "", "State": "", "Country": "", "ZipCode": "", "SingleAddress": $('#txtFullMailingAddr').val() };
+
+                var Model = {
+                    "InvestorID": $("input[name=inlineRadioOptions]:checked").val(), "Name": InvetorNamectrl.val(), "FirstName": InvetorFirstNamectrl.val(), "LastName": InvetorLastNamectrl.val(), "InvestorType": isRoleChecked, "Telephone": InvestorPhoneCtrl.val(), "EMail": InvestorMailCtrl.val(), "TaxID": InvestorTaxCtrl.val(), "InvestorDomicile": RInvDomicile.val(), "ResidingAddress": RAddress, "MailingAddress": MAddress, isCoInvestor: isCoInvestor.is(':checked'), CoInvestorName: CoinvestorName.val(), CoInvestorMail: CoinvestorMail.val(), isMailing: isSame.is(':checked'), Commitment: InvestorCmtAmtctrl.val(), "SelectedWireID": $("input[name=wireRadioOptions]:checked").val()
+                };
+
+                if (Model.InvestorID == 0) {
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify({ "Details": Model }),
+                        url: "/AddInvestor/AddInvestor/InsertNewInvestorByEarlyIQ",
+                        contentType: "application/json"
+                    }).done(function (res) {
+                        if (res.status == true) {
+
+                            Model.InvestorID = res.message;
+                            $("input[name=inlineRadioOptions]:checked").val(Model.InvestorID);
+
+                        }
+                    });
+                }
+                RefreshWire($("input[name=inlineRadioOptions]:checked").val());
+                nextstep1(this);
+            }
+        }
+        else {
+            RefreshWire($("input[name=inlineRadioOptions]:checked").val());
+            nextstep1(this);
+        }
+        return false;
+ });
+
+//$(".next").click(
+function nextstep1(me){
+if(animating) return false;
+animating = true;
+
+current_fs = $(me).parent();
+next_fs = $(me).parent().next();
+
+//activate next step on progressbar using the index of next_fs
+$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+//show the next fieldset
+
+//hide the current fieldset with style
+current_fs.animate({opacity: 0}, {
+step: function(now, mx) {
+//as the opacity of current_fs reduces to 0 - stored in "now"
+//1. scale current_fs down to 80%
+scale = 1 - (1 - now) * 0.2;
+//2. bring next_fs from the right(50%)
+left = (now * 50)+"%";
+//3. increase opacity of next_fs to 1 as it moves in
+opacity = 1 - now;
+current_fs.css({'transform': 'scale('+scale+')'});
+next_fs.css({'left': left, 'opacity': opacity});
+},
+duration: 800,
+complete: function(){
+current_fs.hide();
+animating = false;
+next_fs.show();
+},
+//this comes from the custom easing plugin
+easing: 'easeInOutBack'
+});
+
+}
+//);
+
+    $(".previous").click(function () {
+        window.scrollTo(0, 0);
+        if (animating) return false;
+        animating = true;
+        let investorID = $("input[name=inlineRadioOptions]:checked").val()
+        if (investorID == 0) {
+            current_fs = $(this).parent();
+            previous_fs = $(this).parent().prev();
+
+            //de-activate current step on progressbar
+            $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+            //show the previous fieldset
+
+            //hide the current fieldset with style
+            current_fs.animate({ opacity: 0 }, {
+                step: function (now, mx) {
+                    //as the opacity of current_fs reduces to 0 - stored in "now"
+                    //1. scale previous_fs from 80% to 100%
+                    scale = 0.8 + (1 - now) * 0.2;
+                    //2. take current_fs to the right(50%) - from 0%
+                    left = ((1 - now) * 50) + "%";
+                    //3. increase opacity of previous_fs to 1 as it moves in
+                    opacity = 1 - now;
+                    current_fs.css({ 'left': left });
+                    previous_fs.css({ 'transform': 'scale(' + scale + ')', 'opacity': opacity });
+                },
+                duration: 800,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false;
+                    previous_fs.show();
+                },
+                //this comes from the custom easing plugin
+                easing: 'easeInOutBack'
+            });
+        }
+        else {
+            window.location.reload();
+        }
+    });
+});
+
+
+    function getQueryStringValue(key) {
+        return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+    }
+    function ProcessDocument(Model) {
+        $('#msform').hide();
+        $('#msgTag').html("Document generation is in progress. Please wait for few seconds and do not refresh/leave the page.");
+        $('#msgContainer').show();
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ "Details": Model, "param": window.location.search }),
+            url: PrepopulateInvestorPOSTURL,
+            contentType: "application/json"
+        }).done(function (res) {
+            if (res.status == true) {
+                $('#msform').hide();
+                $('#msgContainer').hide();
+                $('#docContainer').show();
+                $('#iframeDoc').attr('src', res.message);
+                //window.location.href = res;
+                setTimeout(function () {
+                    RefreshPartial();
+                }, 60000);
+            }
+            else {
+                if (res.message != "" && res.message != null) { alert(res.message); }
+                else { alert("Error occurred while processing the document"); }
+            }
+            //window.location.href = res;
+        });
+    }
+$( document ).ready(function() {
+		var iframeHeight = $(window).height() - 60;
+    $('.osx').attr('data-iframe-height', iframeHeight + 'px');
+    //$("input[name='inlineRadioOptions']").trigger("change");
+    HideSteps();
+	});
+$(window).resize(function() {
+			var iframeHeight = $(window).height() - 60;
+		$('.osx').attr( 'data-iframe-height',iframeHeight+'px' );
+    });
+
+    function PreCreateDocument() {
+        var RAddress1, RAddress2, RCity, RState, RCountry, RZip, MAddress1, MAddress2, MCity, MState, MCountry, MZip, isSame, AddressID, RInvDomicile, RCoInvestor;
+        var isCoInvestor, CoinvestorName, CoinvestorMail;
+        var InvestorType, InvestorTitlectrl, RASContact, ASFirstName, ASLastName, ASTitle;
+        InvetorNamectrl = $("#txtInvestorName");
+        InvetorFirstNamectrl = $("#txtInvestorFirstName");
+        InvetorLastNamectrl = $("#txtInvestorLastName");
+        InvetorStatusctrl = $("txtInvestorStatus");
+        InvestorMailCtrl = $("#txtInvestorEMail");
+        InvestorCmtAmtctrl = $("#txtCommitAmt");
+        InvestorTaxCtrl = $("#txtInvestorTaxID");
+        InvestorPhoneCtrl = $("#txtInvestorTelephone");
+        AddressID = $("#lblAddressID");
+        RAddress1 = $("#txtRAddress1");
+        RAddress2 = $("#txtRAddress2");
+        RCity = $("#txtRCity");
+        RState = $("#txtRState");
+        RCountry = $("#drpCountry");
+        RInvDomicile = $("#drpInvDomicile");
+        //RCoInvestor = $("#drpCoInvestor");
+        RZip = $("#txtRZipCode");
+        MAddress1 = $("#txtBAddress1");
+        MAddress2 = $("#txtBAddress2");
+        MCity = $("#txtBCity");
+        MState = $("#txtBState");
+        MCountry = $("#txtBCountry");
+        MZip = $("#txtBZipCode");
+        isSame = $('#chkSameAddress');
+        isCoInvestor = $('#chkIsCoInestor');
+        CoinvestorName = $('#txtCo-InvestorName');
+        CoinvestorMail = $('#txtCo-InvestorEMail');
+        InvestorType = $("input[name=InvestorTypeRadioOptions]");
+        InvestorTitlectrl = $("#txtInvestorTitle");
+        var isRoleChecked = $("input[name=InvestorTypeRadioOptions]:checked").val();
+        var RAddress = { "AddressID": AddressID.text(), "Address1": RAddress1.val(), "Address2": RAddress2.val(), "City": RCity.val(), "State": RState.val(), "Country": RCountry.val(), "ZipCode": RZip.val(), "SingleAddress": "" };
+        //var MAddress = { "Address1":MAddress1.val(), "Address2":MAddress2.val(), "City":MCity.val(), "State":MState.val(), "Country":MCountry.val(), "ZipCode":MZip.val(), "SingleAddress":$('#txtFullMailingAddr').val()  };
+        var MAddress = { "Address1": "", "Address2": "", "City": "", "State": "", "Country": "", "ZipCode": "", "SingleAddress": $('#txtFullMailingAddr').val() };
+        var Model = {
+            "InvestorID": $("input[name=inlineRadioOptions]:checked").val(), "Name": InvetorNamectrl.val(), "FirstName": InvetorFirstNamectrl.val(), "LastName": InvetorLastNamectrl.val(), "InvestorType": isRoleChecked, "Telephone": InvestorPhoneCtrl.val(), "EMail": InvestorMailCtrl.val(), "TaxID": InvestorTaxCtrl.val(), "InvestorDomicile": RInvDomicile.val(), "ResidingAddress": RAddress, "MailingAddress": MAddress, isCoInvestor: isCoInvestor.is(':checked'), CoInvestorName: CoinvestorName.val(), CoInvestorMail: CoinvestorMail.val(), isMailing: isSame.is(':checked'), Commitment: InvestorCmtAmtctrl.val(), "SelectedWireID": $("input[name=wireRadioOptions]:checked").val()
+        };
+        Model.ASContactID = $('#drpASContact').val();
+        Model.ASFirstName = $('#txtASFirstName').val();
+        Model.ASLastName = $('#txtASLastName').val();
+        Model.ASTitle = $('#txtASTitle').val();
+        Model.title = $('#txtInvestorTitle').val();
+        Model.Formation = $('#txtFormation').val();
+        Model.IDType = $('#drpIDNumType').val();
+        Model.IDValue = $('#txtIDNumValue').val();
+        Model.TaxIDType = $('#drpTaxIDType').val();
+        Model.TaxIDValue = $('#txtGovtIDValue').val();
+        Model.TaxYear = $('#txtTaxYear').val();
+        $.ajax({
+            url: "/ESignDocuments/ESignDocuments/preCreateDocument", // Controller and method name
+            dataType: "json", // return type
+            type: "POST", // Get Request
+            contentType: "application/json; charset=utf-8", //defines the contentType of the request
+            cache: false,
+            data: JSON.stringify({
+                "Details": Model
+            }),
+
+            global: false,
+            success: function (data) {
+                if (data.status == true) {
+
+                    //window.location.href="http://localhost:62417/Offerings";
+                    $('#hdnDocCreatedStatus').val("1");
+
+                }
+                else {
+                    $('#hdnDocCreatedStatus').val("2");
+                }
+
+
+            },
+            error: function (e) {
+                $('#hdnDocCreatedStatus').val("2");
+                console.log(e);
+            }
+        });
+    }
+
+    function LoadDocument() {
+        if ($('#hdnDocCreatedStatus').val() == "1")
+        {
+            var RAddress1, RAddress2, RCity, RState, RCountry, RZip, MAddress1, MAddress2, MCity, MState, MCountry, MZip, isSame, AddressID, RInvDomicile, RCoInvestor;
+            var isCoInvestor, CoinvestorName, CoinvestorMail;
+            var InvestorType, InvestorTitlectrl, RASContact, ASFirstName, ASLastName, ASTitle;
+            InvetorNamectrl = $("#txtInvestorName");
+            InvetorFirstNamectrl = $("#txtInvestorFirstName");
+            InvetorLastNamectrl = $("#txtInvestorLastName");
+            InvetorStatusctrl = $("txtInvestorStatus");
+            InvestorMailCtrl = $("#txtInvestorEMail");
+            InvestorCmtAmtctrl = $("#txtCommitAmt");
+            InvestorTaxCtrl = $("#txtInvestorTaxID");
+            InvestorPhoneCtrl = $("#txtInvestorTelephone");
+            AddressID = $("#lblAddressID");
+            RAddress1 = $("#txtRAddress1");
+            RAddress2 = $("#txtRAddress2");
+            RCity = $("#txtRCity");
+            RState = $("#txtRState");
+            RCountry = $("#drpCountry");
+            RInvDomicile = $("#drpInvDomicile");
+            //RCoInvestor = $("#drpCoInvestor");
+            RZip = $("#txtRZipCode");
+            MAddress1 = $("#txtBAddress1");
+            MAddress2 = $("#txtBAddress2");
+            MCity = $("#txtBCity");
+            MState = $("#txtBState");
+            MCountry = $("#txtBCountry");
+            MZip = $("#txtBZipCode");
+            isSame = $('#chkSameAddress');
+            isCoInvestor = $('#chkIsCoInestor');
+            CoinvestorName = $('#txtCo-InvestorName');
+            CoinvestorMail = $('#txtCo-InvestorEMail');
+            InvestorType = $("input[name=InvestorTypeRadioOptions]");
+            InvestorTitlectrl = $("#txtInvestorTitle");
+            var isRoleChecked = $("input[name=InvestorTypeRadioOptions]:checked").val();
+            var RAddress = { "AddressID": AddressID.text(), "Address1": RAddress1.val(), "Address2": RAddress2.val(), "City": RCity.val(), "State": RState.val(), "Country": RCountry.val(), "ZipCode": RZip.val(), "SingleAddress": "" };
+            //var MAddress = { "Address1":MAddress1.val(), "Address2":MAddress2.val(), "City":MCity.val(), "State":MState.val(), "Country":MCountry.val(), "ZipCode":MZip.val(), "SingleAddress":$('#txtFullMailingAddr').val()  };
+            var MAddress = { "Address1": "", "Address2": "", "City": "", "State": "", "Country": "", "ZipCode": "", "SingleAddress": $('#txtFullMailingAddr').val() };
+            var Model = {
+                "InvestorID": $("input[name=inlineRadioOptions]:checked").val(), "Name": InvetorNamectrl.val(), "FirstName": InvetorFirstNamectrl.val(), "LastName": InvetorLastNamectrl.val(), "InvestorType": isRoleChecked, "Telephone": InvestorPhoneCtrl.val(), "EMail": InvestorMailCtrl.val(), "TaxID": InvestorTaxCtrl.val(), "InvestorDomicile": RInvDomicile.val(), "ResidingAddress": RAddress, "MailingAddress": MAddress, isCoInvestor: isCoInvestor.is(':checked'), CoInvestorName: CoinvestorName.val(), CoInvestorMail: CoinvestorMail.val(), isMailing: isSame.is(':checked'), Commitment: InvestorCmtAmtctrl.val(), "SelectedWireID": $("input[name=wireRadioOptions]:checked").val()
+            };
+
+        var EarlyIQURL = "https://dev.earlyiq.com/partner/Oxygen/cert/getstarted?page_template=modal";
+        var EFirstName = "&first_name=" + InvetorFirstNamectrl.val();
+        var ELastName = "&last_name=" + InvetorLastNamectrl.val();
+        var EEmail = "&email=" + encodeURIComponent(InvestorMailCtrl.val());
+        var EIndividualType = "&type=oxygen-inv-001";
+        var EEntityType = "&type=oxygen-bizinv-001";
+        var EApiKey = "&api_key1=2aaeVjaG2nxPsj6Vrr6pim1ewwAGo5FLePWsHn6mgQA%3D";
+        var EPassword = "&no_password=1";
+        var tempssnval = InvestorTaxCtrl.val();
+        if (tempssnval != null) {
+            tempssnval = tempssnval.replace(/-/g, "")
+        }
+        var Essn = "&ssn=" + btoa(tempssnval);
+        var ECompanyID = "&companyID=" + Model.InvestorID;
+        var ECompanyName = "&company_name=" + encodeURIComponent(InvetorNamectrl.val());
+        var EEmail = "&email=" + InvestorMailCtrl.val();
+        var EIndAddress1 = "&address1=" + encodeURIComponent(RAddress1.val());
+        var EIndCity = "&city=" + encodeURIComponent(RCity.val());
+        var EIndState = "&state=" + encodeURIComponent(RState.val());
+        var EIndPostal = "&postal=" + encodeURIComponent(RZip.val());
+        var EBusAddress1 = "&bus_address1=" + encodeURIComponent(RAddress1.val());
+        var EBusCity = "&bus_city=" + encodeURIComponent(RCity.val());
+        var EBusState = "&bus_state=" + encodeURIComponent(RState.val());
+        var EBusPostal = "&bus_postal=" + encodeURIComponent(RZip.val());
+        var EBusPhone = "&bus_phone=" + encodeURIComponent(InvestorPhoneCtrl.val());
+        var EFinalURL;
+        if ($('#hdnInvStatus').val() == 'Verified') {
+            $('#msform').hide();
+
+            $('#msgTag').html("Document generation is in progress. Please wait for few seconds and do not refresh/leave the page.");
+            $('#msgContainer').show();
+            Model.ASContactID = $('#drpASContact').val();
+            Model.ASFirstName = $('#txtASFirstName').val();
+            Model.ASLastName = $('#txtASLastName').val();
+            Model.ASTitle = $('#txtASTitle').val();
+            Model.title = $('#txtInvestorTitle').val();
+            Model.Formation = $('#txtFormation').val();
+            Model.IDType = $('#drpIDNumType').val();
+            Model.IDValue = $('#txtIDNumValue').val();
+            Model.TaxIDType = $('#drpTaxIDType').val();
+            Model.TaxIDValue = $('#txtGovtIDValue').val();
+            Model.TaxYear = $('#txtTaxYear').val();
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({ "Details": Model, "param": window.location.search }),
+                url: PrepopulateInvestorPOSTURL,
+                contentType: "application/json"
+            }).done(function (res) {
+                if (res.status == true) {
+                    $('#msform').hide();
+                    $('#msgContainer').hide();
+                    $('#divEarlyIQPopup').hide();
+                    $('#docContainer').show();
+                    $('#iframeDoc').attr('src', res.message);
+                    //window.location.href = res;
+
+                    setTimeout(function () {
+                        RefreshPartial();
+                    }, 60000);
+
+                }
+                else {
+                    $('#divEarlyIQPopup').hide();
+                    $('#msgContainer').hide();
+                    $('#msform').show();
+
+                    if (res.message != "" && res.message != null) { alert(res.message); }
+
+
+                    else { alert("Error occurred while processing the document"); }
+                }
+                //window.location.href = res;
+            });
+        }
+        else {
+            $('#msform').hide();
+
+            if (Model.InvestorID == 0) {
+                //$('#divEarlyIQPopup').hide();
+                // $('#msgContainer').hide();
+                //$('#msform').show();
+                //alert("Error occurred while processing the document");
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ "Details": Model }),
+                    url: "/AddInvestor/AddInvestor/InsertNewInvestorByEarlyIQ",
+                    contentType: "application/json"
+                }).done(function (res) {
+                    if (res.status == true) {
+
+                        Model.InvestorID = res.message;
+                        Model.ASContactID = $('#drpASContact').val();
+                        Model.ASFirstName = $('#txtASFirstName').val();
+                        Model.ASLastName = $('#txtASLastName').val();
+                        Model.ASTitle = $('#txtASTitle').val();
+                        Model.title = $('#txtInvestorTitle').val();
+                        Model.Formation = $('#txtFormation').val();
+                        Model.IDType = $('#drpIDNumType').val();
+                        Model.IDValue = $('#txtIDNumValue').val();
+                        Model.TaxIDType = $('#drpTaxIDType').val();
+                        Model.TaxIDValue = $('#txtGovtIDValue').val();
+                        Model.TaxYear = $('#txtTaxYear').val();
+                        $('#msform').hide();
+
+                        $('#msgTag').html("Document generation is in progress. Please wait for few seconds and do not refresh/leave the page.");
+                        $('#msgContainer').show();
+                        $.ajax({
+                            type: "POST",
+                            data: JSON.stringify({ "Details": Model, "param": window.location.search }),
+                            url: PrepopulateInvestorPOSTURL,
+                            contentType: "application/json"
+                        }).done(function (res) {
+                            if (res.status == true) {
+                                $('#msform').hide();
+                                $('#msgContainer').hide();
+                                $('#divEarlyIQPopup').hide();
+                                $('#docContainer').show();
+                                $('#iframeDoc').attr('src', res.message);
+                                //window.location.href = res;
+
+                                setTimeout(function () {
+                                    RefreshPartial();
+                                }, 60000);
+
+                            }
+                            else {
+                                $('#divEarlyIQPopup').hide();
+                                $('#msgContainer').hide();
+                                $('#msform').show();
+
+                                if (res.message != "" && res.message != null) { alert(res.message); }
+
+
+                                else { alert("Error occurred while processing the document"); }
+                            }
+                            //window.location.href = res;
+                        });
+                    }
+                    else {
+                    }
+                });
+            }
+            else {
+                Model.ASContactID = $('#drpASContact').val();
+                Model.ASFirstName = $('#txtASFirstName').val();
+                Model.ASLastName = $('#txtASLastName').val();
+                Model.ASTitle = $('#txtASTitle').val();
+                Model.title = $('#txtInvestorTitle').val();
+                Model.Formation = $('#txtFormation').val();
+                Model.IDType = $('#drpIDNumType').val();
+                Model.IDValue = $('#txtIDNumValue').val();
+                Model.TaxIDType = $('#drpTaxIDType').val();
+                Model.TaxIDValue = $('#txtGovtIDValue').val();
+                Model.TaxYear = $('#txtTaxYear').val();
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ "Details": Model, "param": window.location.search }),
+                    url: PrepopulateInvestorPOSTURL,
+                    contentType: "application/json"
+                }).done(function (res) {
+                    if (res.status == true) {
+                        $('#msform').hide();
+                        $('#msgContainer').hide();
+                        $('#divEarlyIQPopup').hide();
+                        $('#docContainer').show();
+                        $('#iframeDoc').attr('src', res.message);
+                        //window.location.href = res;
+
+                        setTimeout(function () {
+                            RefreshPartial();
+                        }, 60000);
+
+                    }
+                    else {
+                        $('#divEarlyIQPopup').hide();
+                        $('#msgContainer').hide();
+                        $('#msform').show();
+
+                        if (res.message != "" && res.message != null) { alert(res.message); }
+
+
+                        else { alert("Error occurred while processing the document"); }
+                    }
+                    //window.location.href = res;
+                });
+            }
+            getEarlyIQPopupStatus();
+        }
+    }
+        else if ($('#hdnDocCreatedStatus').val() =="2") {
+            $('#divEarlyIQPopup').hide();
+            $('#msgContainer').hide();
+            $('#msform').show();
+
+            if (res.message != "" && res.message != null) { alert(res.message); }
+
+
+            else { alert("Error occurred while processing the document"); }
+    }
+        else {
+            //this will wait 4 seconds and then fire the load partial function
+            setTimeout(function () {
+
+                //recall this function so that it will continue to loop
+                LoadDocument();
+            }, 4000);
+        }
+    }
+
+    function RefreshPartial() {
+        $.ajax({
+            url: "/ESignDocuments/ESignDocuments/GetUpdateCount", // Controller and method name
+            dataType: "json", // return type
+            type: "GET", // Get Request
+            contentType: "application/json; charset=utf-8", //defines the contentType of the request
+            cache: false,
+            data: "{}", // input parameters
+            global: false,
+            success: function (data) {
+                if (data.status == true) {
+                    window.scrollTo(0, 0);
+                    //window.location.href="http://localhost:62417/Offerings";
+                    $('#docContainer').hide();
+                    if (data.message != null && data.message != "") {
+                        $("#msgTag").html(data.message);
+                    }
+                    else {
+                        $("#msgTag").html("Thanks! You've successfully signed the document.");
+                    }
+                    $('#msgContainer').show();
+                    $('#myModal').modal({ backdrop: 'static', keyboard: false });
+                    $('#myModal').modal('show');
+                }
+                else {
+                    //this will wait 4 seconds and then fire the load partial function
+                    setTimeout(function () {
+
+                        //recall this function so that it will continue to loop
+                        RefreshPartial();
+                    }, 4000);
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+</script>
+<script>
+    function EditWire(wireid, recstatus,investorID) {
+        var url = "ESignDocuments/ESignDocuments/getInvestorWireDetails/" + +$("#drpAccounts").val();
+        $.ajax({
+            type: "POST",
+            cache: false,
+            async: false,
+            url: AppPath + url,
+            data: { "investorID": investorID},
+
+            success: function (data) {
+                if (data.length > 0) {
+                    if (recstatus == 1) {
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].wireID == wireid) {
+                                if (data[i].wireRecStatus == 502) {
+                                    recstatus = 502;
+                                }
+                                if (data[i].wireRecStatus == 501) {
+                                    recstatus = 501;
+                                }
+                            }
+                        }
+                    }
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].wireID == wireid && data[i].wireRecStatus == recstatus) {
+                            $("#validateMsgEditWire").html('');
+                            $("#txtEditWireDesc").val(data[i].WiringTitle);
+                            $("#drpEditWireType").val(data[i].WireTypeID);
+                            $("#drpEditIsUSBank").val(data[i].IsUSBank);
+                            $("#txtEditBankName").val(data[i].BankName);
+                            $("#txtEditBankAddr1").val(data[i].Address1);
+                            $("#txtEditBankAddr2").val(data[i].Address2);
+                            $("#txtEditABANumber").val(data[i].ABANumber);
+                            $("#drpEditAcctType").val(data[i].AccountTypeID);
+                            $("#txtEditAcctName").val(data[i].AccountName);
+                            $("#txtEditAccount").val(data[i].AccountNumber);
+                            $("#txtEditSwift").val(data[i].Swift);
+                            $("#txtEditName1").val(data[i].FFCName1);
+                            $("#txtEditName2").val(data[i].FFCName2);
+                            $("#txtEditNumber1").val(data[i].FFCNumber1);
+                            $("#txtEditNumber2").val(data[i].FFCNumber2);
+                            $("#txtEditReference").val(data[i].Reference);
+                            $("#drpEditIsDefault").val(data[i].IsDefault);
+                            $("#txtEditNotes").val(data[i].Notes);
+                            $("#hdnWireID").val(data[i].wireID);
+                            $("#hdnWireFundID").val(data[i].FundID);
+                            $("#hdnwireRecStatus").val(data[i].wireRecStatus);
+                            $("#drpEditWireFund").val(data[i].FundID);
+                            $("#hdnWireInvestorID").val(investorID);
+                            $("#txtEditBankNumber").val(data[i].BankNumber);
+                            if (data[i].IsUSBank == 1) {
+                                $('#lblRoutingNum').text('ABA/Routing Number');
+                                $('#lblBankAddr1').text('Bank Address');
+                                if ($("#txtEditABANumber").val() == '') {
+                                    $("#txtEditABANumber").attr("placeholder", "ABA/Routing Number");
+                                }
+                                if ($("#txtEditBankAddr1").val() == '') {
+                                    $("#txtEditBankAddr1").attr("placeholder", "Bank Address");
+                                }
+                                $('.nonusitems').hide();
+                                $('.usitems').show();
+                            }
+                            else {
+                                //$('#lblRoutingNum').text('Bank Number');
+                                $('#lblBankAddr1').text('Branch Name and Number');
+                                if ($("#txtEditABANumber").val() == '') {
+                                    //$("#txtEditABANumber").attr("placeholder", "Bank Number");
+                                }
+                                if ($("#txtEditBankAddr1").val() == '') {
+                                    $("#txtEditBankAddr1").attr("placeholder", "Branch Name and Number");
+                                }
+                                $('.nonusitems').show();
+                                $('.usitems').hide();
+                            }
+                        }
+                    }
+                    if (recstatus == 501)
+                        $("#drpEditWireFund").removeAttr('disabled');
+                    else
+                        $("#drpEditWireFund").attr('disabled', 'disabled');
+
+                    $('select#drpEditWireFund').selectpicker('refresh');
+                }
+            },
+            error: function (e) {
+
+            }
+
+        });
+    }
+
+    function RefreshWire(investorID) {
+        var url = "ESignDocuments/ESignDocuments/getInvestorWireDetails/" + +$("#drpAccounts").val();
+        $.ajax({
+            type: "POST",
+            cache: false,
+            async: false,
+            url: AppPath + url,
+            data: { "investorID": investorID },
+
+            success: function (data) {
+                if (data.length > 0) {
+                    //if (recstatus == 1) {
+                    //    for (var i = 0; i < data.length; i++) {
+                    //        if (data[i].wireID == wireid) {
+                    //            if (data[i].wireRecStatus == 502) {
+                    //                recstatus = 502;
+                    //            }
+                    //            if (data[i].wireRecStatus == 501) {
+                    //                recstatus = 501;
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
+                    
+
+                    var i;
+                    var wiredetaildata = "";
+                    $('#divWireGrid').empty();
+                    var wiredata = '<table class="tblwire"><th>Select</th>' +
+                        '<th>Wire Details</th>' +
+                        '<th>Is Default</th>' +
+                        '<th>Fund Name</th>' +
+                        '<th>Action</th>';
+
+                    for (i = 0; i < data.length; i++) {
+                        wiredetaildata = 'WiringTitle: ' + data[i].WiringTitle + '<br/>Account Number: ' + getMaskedValue(data[i].AccountNumber) + '<br/>ABA Number: ' + getMaskedValue(data[i].ABANumber);
+                        wiredata = wiredata + '<tr><td><input  type="radio" name="wireRadioOptions" id="wire' + data[i].wireID + '" value = "' + data[i].wireID + '" > </td><td>';
+                        wiredata = wiredata + wiredetaildata + '</td><td>';
+                        if (data[i].IsDefault == 1) {
+                            wiredata = wiredata + '<input type="checkbox" checked="checked" disabled="disabled"></td><td>';
+                        }
+                        else {
+                            wiredata = wiredata + '<input type="checkbox" disabled="disabled"></td><td>';
+                        }
+
+                        wiredata = wiredata + data[i].FundName + '</td><td>';
+                        wiredata = wiredata + '<input type="button" class="btn btn-primary" Value="Edit" onclick="javascript:EditWire(' + data[i].wireID + ',' + data[i].wireRecStatus + ',' + data[i].AccountID + ')" data-toggle="modal" data-target="#editWire"/></td></tr>';
+                    }
+                    wiredata = wiredata + '<tr><td><input  type="radio" name="wireRadioOptions" id="wire0" value="0"></td><td>Wire details will be provided later</td><td></td><td></td> <td></td> </tr> ';
+                    $('#divWireGrid').append(wiredata);
+
+                }
+		else
+                {
+                    document.getelementbyid('btnaddWire').disabled = ''
+
+                    $('#divWireGrid').empty();
+                    var wiredata = '<table class="tblwire"><th>Select</th>' +
+                        '<th>Wire Details</th>' +
+                        '<th>Is Default</th>' +
+                        '<th>Fund Name</th>' +
+                        '<th>Action</th>';
+			  wiredata = wiredata + '<tr><td><input  type="radio" name="wireRadioOptions" id="wire0" value="0"></td><td>Wire details will be provided later</td><td></td><td></td> <td></td> </tr> ';
+                    $('#divWireGrid').append(wiredata);
+		}
+            },
+            error: function (e) {
+
+            }
+
+        });
+    }
+    function getMaskedValue(wirevalue) {
+        if (wirevalue.length > 0) {
+            if (wirevalue != '') {
+                if (wirevalue.length > 4) {
+                    return wirevalue.substr(0, wirevalue.length - 4) + 'XXXX' ;
+                }
+                else
+                    return 'XXXX';
+            }
+            else
+                return wirevalue;
+        }
+        else
+            return wirevalue;
+    }
+    function SaveWire() {
+        var vaildEditWire = false;
+        if ($('#drpAddIsUSBank').val() == 1 ) {
+            if ($("#drpAddWireType option:selected").text() == 'Wire') {
+                if ($("#txtAddWireDesc").val() != '' && $("#drpAddWireType").val() != '0' && $("#txtAddAcctName").val() != '' && $("#txtAddAccount").val() != '' && $("#txtAddABANumber").val() != '' && $("#txtAddBankName").val() != '') {
+                    vaildEditWire = true;
+                }
+            }
+            if ($("#drpAddWireType option:selected").text() == 'ACH') {
+                if ($("#txtAddWireDesc").val() != '' && $("#drpAddWireType").val() != '0' && $("#txtAddAcctName").val() != '' && $("#txtAddAccount").val() != '' && $("#txtAddABANumber").val() != '' && $("#txtAddBankName").val() != '') {
+                    vaildEditWire = true;
+                }
+            }
+            if ($("#drpAddWireType option:selected").text() == 'check') {
+                if ($("#txtAddWireDesc").val() != '' && $("#drpAddWireType").val() != '0' && $("#txtAddAcctName").val() != '' && $("#txtAddAccount").val() != '' && $("#txtAddABANumber").val() != '' && $("#txtAddBankName").val() != '') {
+                    vaildEditWire = true;
+                }
+            }
+
+
+        }
+        else {
+            if ($("#txtAddWireDesc").val() != '' && $("#txtAddAcctName").val() != '' && $("#txtAddBankName").val() != '' && $("#txtAddSwift").val() != '' && $("#txtAddReference").val() != '') {
+
+                $("#drpAddWireType option:contains('Wire')").each(function () {
+
+                    if ($(this).html() == 'Wire') {
+                        $(this).attr('selected', 'selected');
+                    }
+                });
+                vaildEditWire = true;
+            }
+        }
+
+        if (vaildEditWire) {
+            $("#validateMsgNewWire").html('');
+
+        var AcctWiringInfo = {};
+        AcctWiringInfo["wireID"] = 0;
+        AcctWiringInfo["WiringTitle"] = $("#txtAddWireDesc").val();
+        AcctWiringInfo["WireTypeID"] = $("#drpAddWireType").val();
+        AcctWiringInfo["IsUSBank"] = $("#drpAddIsUSBank").val();
+        AcctWiringInfo["BankName"] = $("#txtAddBankName").val();
+        AcctWiringInfo["Address1"] = $("#txtAddBankAddr1").val();
+        AcctWiringInfo["Address2"] = $("#txtAddBankAddr2").val();
+        AcctWiringInfo["ABANumber"] = $("#txtAddABANumber").val();
+        AcctWiringInfo["AccountTypeID"] = $("#drpAddAcctType").val();
+        AcctWiringInfo["AccountName"] = $("#txtAddAcctName").val();
+        AcctWiringInfo["AccountNumber"] = $("#txtAddAccount").val();
+        AcctWiringInfo["Swift"] = $("#txtAddSwift").val();
+        AcctWiringInfo["FFCName1"] = $("#txtAddName1").val();
+        AcctWiringInfo["FFCName2"] = $("#txtAddName2").val();
+        AcctWiringInfo["FFCNumber1"] = $("#txtAddNumber1").val();
+        AcctWiringInfo["FFCNumber2"] = $("#txtAddNumber2").val();
+        AcctWiringInfo["Reference"] = $("#txtAddReference").val();
+        AcctWiringInfo["IsDefault"] = $("#drpAddIsDefault").val();
+        AcctWiringInfo["Notes"] = $("#txtAddNotes").val();
+            AcctWiringInfo["FundID"] = $("#drpAddWireFund").val();
+            AcctWiringInfo["BankNumber"] = $("#txtAddBankNumber").val();
+        AcctWiringInfo["wireRecStatus"] = 501;
+        var AccountName = $("#lblAccountName").text();
+
+
+        var url = '@Url.Action("SaveWire", "ESignDocuments")';
+        var data = {};
+
+        data.acctWiringInfo = AcctWiringInfo;
+            data.accountName = InvetorNamectrl.val();
+            data.accountID = $("input[name=inlineRadioOptions]:checked").val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: 'application/json',
+            cache: false,
+
+            success: function (data) {
+                if (data.IsSuccess == true) {
+                    //window.location.href = "ContactDetails";
+                    $("#validateMsgNewWire").html('Wire Details Saved Successfully');
+                    $('#newWire').modal('hide');
+                    RefreshWire($("input[name=inlineRadioOptions]:checked").val());
+                }
+                else {
+                    $("#validateMsgNewWire").html(data.ErrorMsg);
+
+                }
+            },
+            error: function (e) {
+
+            }
+
+        });
+        }
+        else {
+                    $("#validateMsgNewWire").html("Please enter values for mandatory fields");
+
+                }
+
+
+    }
+
+    function UpdateWire() {
+        var vaildEditWire = false;
+        if ($('#drpEditIsUSBank').val() == 1) {
+            if ($("#txtEditWireDesc").val() != '' && $("#drpEditWireType").val() != '0' && $("#txtEditAcctName").val() != '' && $("#txtEditAccount").val() != '' && $("#txtEditABANumber").val() != '' && $("#txtEditBankName").val() !='' ) {
+                vaildEditWire = true;
+            }
+        }
+        else {
+            if ($("#txtEditWireDesc").val() != '' && $("#txtEditAcctName").val() != '' && $("#txtEditBankName").val() != '' && $("#txtEditSwift").val() != '' && $("#txtEditReference").val() != '') {
+                vaildEditWire = true;
+            }
+        }
+
+        if (vaildEditWire) {
+            $("#validateMsgEditWire").html('');
+        var AcctWiringInfo = {};
+        AcctWiringInfo["wireID"] = $("#hdnWireID").val();
+        AcctWiringInfo["WiringTitle"] = $("#txtEditWireDesc").val();
+        AcctWiringInfo["WireTypeID"] = $("#drpEditWireType").val();
+        AcctWiringInfo["IsUSBank"] = $("#drpEditIsUSBank").val();
+        AcctWiringInfo["BankName"] = $("#txtEditBankName").val();
+        AcctWiringInfo["Address1"] = $("#txtEditBankAddr1").val();
+        AcctWiringInfo["Address2"] = $("#txtEditBankAddr2").val();
+        AcctWiringInfo["ABANumber"] = $("#txtEditABANumber").val();
+        AcctWiringInfo["AccountTypeID"] = $("#drpEditAcctType").val();
+        AcctWiringInfo["AccountName"] = $("#txtEditAcctName").val();
+        AcctWiringInfo["AccountNumber"] = $("#txtEditAccount").val();
+        AcctWiringInfo["Swift"] = $("#txtEditSwift").val();
+        AcctWiringInfo["FFCName1"] = $("#txtEditName1").val();
+        AcctWiringInfo["FFCName2"] = $("#txtEditName2").val();
+        AcctWiringInfo["FFCNumber1"] = $("#txtEditNumber1").val();
+        AcctWiringInfo["FFCNumber2"] = $("#txtEditNumber2").val();
+        AcctWiringInfo["Reference"] = $("#txtEditReference").val();
+        AcctWiringInfo["IsDefault"] = $("#drpEditIsDefault").val();
+        AcctWiringInfo["Notes"] = $("#txtEditNotes").val();
+        AcctWiringInfo["FundID"] = $("#drpEditWireFund").val();
+        AcctWiringInfo["wireRecStatus"] = $("#hdnwireRecStatus").val();
+            AcctWiringInfo["PrevFundID"] = $("#hdnWireFundID").val();
+            AcctWiringInfo["BankNumber"] = $("#txtEditBankNumber").val();
+        var AccountName = $("#lblAccountName").text();
+
+
+
+        var url = '@Url.Action("UpdateWire", "ESignDocuments")';
+        var data = {};
+
+        data.acctWiringInfo = AcctWiringInfo;
+        data.accountName =  InvetorNamectrl.val();;
+            data.accountID = $("#hdnWireInvestorID").val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: 'application/json',
+            cache: false,
+
+            success: function (data) {
+                if (data.IsSuccess == true) {
+                    //window.location.href = "ContactDetails";
+                    $("#validateMsgEditWire").html('Wire Details Saved Successfully');
+                    $('#editWire').modal('hide');
+                    RefreshWire($("input[name=inlineRadioOptions]:checked").val());
+                }
+                else {
+                    $("#validateMsgEditWire").html(data.ErrorMsg );
+
+                }
+            },
+            error: function (e) {
+
+            }
+
+        });
+        }
+         else {
+                    $("#validateMsgEditWire").html("Please enter values for mandatory fields" );
+
+                }
+    }
+    $('#drpEditIsUSBank').change(function () {
+        if ($('#drpEditIsUSBank').val() == 1) {
+            $('#lblRoutingNum').text('ABA/Routing Number');
+            $('#lblBankAddr1').text('Bank Address');
+            if ($("#txtEditABANumber").val() == '') {
+                $("#txtEditABANumber").attr("placeholder", "ABA/Routing Number");
+            }
+            if ($("#txtEditBankAddr1").val() == '') {
+                $("#txtEditBankAddr1").attr("placeholder", "Bank Address");
+            }
+            $('.nonusitems').hide();
+            $('.usitems').show();
+        }
+        else {
+            $('#lblRoutingNum').text('Bank Number');
+            $('#lblBankAddr1').text('Branch Name and Number');
+            if ($("#txtEditABANumber").val() == '') {
+                $("#txtEditABANumber").attr("placeholder", "Bank Number");
+            }
+            if ($("#txtEditBankAddr1").val() == '') {
+                $("#txtEditBankAddr1").attr("placeholder", "Branch Name and Number");
+            }
+            $('.nonusitems').show();
+            $('.usitems').hide();
+        }
+    });
+    $('#drpAddIsUSBank').change(function () {
+        if ($('#drpAddIsUSBank').val() == 1) {
+            $('#lblAddRoutingNum').text('ABA/Routing Number');
+            $('#lblAddBankAddr1').text('Bank Address');
+            $("#txtAddABANumber").attr("placeholder", "ABA/Routing Number");
+            $("#txtAddBankAddr1").attr("placeholder", "Bank Address");
+            $('.addnonusitems').hide();
+            $('.addusitems').show();
+        }
+        else {
+            $('#lblAddRoutingNum').text('Bank Number');
+            $('#lblAddBankAddr1').text('Branch Name and Number');
+            $("#txtAddABANumber").attr("placeholder", "Bank Number");
+            $("#txtAddBankAddr1").attr("placeholder", "Branch Name and Number");
+            $('.addnonusitems').show();
+            $('.addusitems').hide();
+        }
+    });
+
+
+    $('#drpAddWireType').change(function () {
+        if ($("#drpAddWireType option:selected").text() == 'Wire') {
+           
+        }
+        if ($("#drpAddWireType option:selected").text() == 'ACH') {
+           
+        }
+    });
+
+
+
+
+    $('#btnAddWire').click(function () {
+
+        $("#validateMsg").html('');
+        $("#validateMsgNewWire").html('');
+        SaveWire();
+
+    });
+
+    $('#btnUpdateWire').click(function () {
+
+        $("#validateMsg").html('');
+        $("#validateMsgEditWire").html('');
+        UpdateWire();
+
+    });
+    function clearAddWireControls() {
+        if ($('#drpAddIsUSBank').val() == 1)
+            {
+            $('#lblAddRoutingNum').text('ABA/Routing Number');
+            $('#lblAddBankAddr1').text('Bank Address');
+            $("#txtAddABANumber").attr("placeholder", "ABA/Routing Number");
+            $("#txtAddBankAddr1").attr("placeholder", "Bank Address");
+                $('.addnonusitems').hide();
+                $('.addusitems').show();
+            }
+        else {
+                $('#lblAddRoutingNum').text('Bank Number');
+                $('#lblAddBankAddr1').text('Branch Name and Number');
+                $("#txtAddABANumber").attr("placeholder", "Bank Number");
+                $("#txtAddBankAddr1").attr("placeholder", "Branch Name and Number");
+                $('.addnonusitems').show();
+                $('.addusitems').hide();
+            }
+
+        $("#validateMsg").html('');
+        $("#validateMsgNewWire").html('');
+        $("#txtAddWireDesc").val('');
+        $("#drpAddWireType").val(0);
+        $("#drpAddIsUSBank").val(0);
+        $("#txtAddBankName").val('');
+        $("#txtAddBankAddr1").val('');
+        $("#txtAddBankAddr2").val('');
+        $("#txtAddABANumber").val('');
+        $("#drpAddAcctType").val(0);
+        $("#txtAddAcctName").val('');
+        $("#txtAddAccount").val('');
+        $("#txtAddSwift").val('');
+        $("#txtAddName1").val('');
+        $("#txtAddName2").val('');
+        $("#txtAddNumber1").val('');
+        $("#txtAddNumber2").val('');
+        $("#txtAddReference").val('');
+        $("#drpAddIsDefault").val(0);
+        $("#txtAddNotes").val('');
+        $("#drpAddWireFund").val(0);
+        $("#txtAddBankNumber").val('');
+    }
+
+    $('#drpASContact').change(function () {
+        if ($('#drpASContact').val() > 0) {
+            $.ajax({
+                type: "GET",
+                url: InvestorDetailsURL,
+                data: { "InvestorID": $("input[name=inlineRadioOptions]:checked").val() },
+                success: function (response) {
+                    if (response.ASContactList) {
+                        for (i = 0; i < response.ASContactList.length; i++) {
+                            if (response.ASContactList[i].ASContactID == $('#drpASContact').val()) {
+                                $('#txtASFirstName').val(response.ASContactList[i].ASFirstName);
+                                $('#txtASLastName').val(response.ASContactList[i].ASLastName);
+                                $('#txtASTitle').val(response.ASContactList[i].ASTitle);
+                                $('#txtASFirstName').prop("disabled", true);
+                                $('#txtASLastName').prop("disabled", true);
+                                $('#txtASTitle').prop("disabled", true);
+
+                            }
+                        }
+                    }
+                    else {
+                        $('#txtASFirstName').val('');
+                        $('#txtASLastName').val('');
+                        $('#txtASTitle').val('');
+                        $('#txtASFirstName').prop("disabled", false);
+                        $('#txtASLastName').prop("disabled", false);
+                        $('#txtASTitle').prop("disabled", false);
+
+                    }
+                }
+            });
+        }
+        else {
+            $('#txtASFirstName').val('');
+            $('#txtASLastName').val('');
+            $('#txtASTitle').val('');
+            $('#txtASFirstName').prop("disabled", false);
+            $('#txtASLastName').prop("disabled", false);
+            $('#txtASTitle').prop("disabled", false);
+
+        }
+
+    });
+</script>
