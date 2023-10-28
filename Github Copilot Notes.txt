@@ -1,0 +1,21 @@
+Github Copilot
+
+=> Prerequirestics:
+
+1) Visual Studio 2022 version 17.4.4 or later
+
+2) a GitHub Copilot subscription
+
+=> Installation instructions
+1) Open Visual Studio.
+
+2) On the menu bar, select Extensions > Manage Extensions.
+
+3) In the Search box, enter "GitHub Copilot".
+
+4) Select the GitHub Copilot extension, and then select the Download button.
+
+5) Close the all opened Visual studio, and after VSIX installed opened and installed Github Copilot. 
+
+
+To successfully authorize Github Copilot, we need active subscriptionf
