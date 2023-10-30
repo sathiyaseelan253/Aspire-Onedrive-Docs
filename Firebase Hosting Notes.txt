@@ -1,0 +1,32 @@
+Firebase Hosting:
+
+1) Install firebase CLI if not
+npm install -g firebase-tools
+
+2) firebase login
+Redirects to Firebase Login page
+
+3) firebase init
+
+4) Are you ready to proceed => yes
+
+5) Which firebase featurn, you want to use
+Hosting=> Configure files for Firebase Hosting
+
+6) Want to use as public directory 
+dist/{projectName}
+
+7) Configure as a single-page app => y
+
+8) github => n
+
+9) firebase deploy
+
+Issues faced:
+your real index.html file might be overwrite by firebase generic file that's why the problem is occurred. so change code of index.html after deployment of project. if you see this box on your web page
+
+Fix:
+Run these commands in terminal=> 
+
+1) ng build 
+2) firebase deploy

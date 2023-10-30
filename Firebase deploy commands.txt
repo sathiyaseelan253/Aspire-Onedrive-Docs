@@ -1,0 +1,28 @@
+Firebase deploy commands:
+
+1) Install firebase cli globally
+npm install -g firebase-tools
+
+2) Open a terminal in the root directory of your app
+
+firebase login
+
+Redirects to firebase login page, login there and after login close the web page and come back to CLI
+
+3) firebase init
+
+4) you’re asked which Firebase CLI features you want to set up, select by clicking (space bar) the Hosting: “Configure files for Firebase Hosting and (optionally) set up GitHub Action deploys” 
+
+5) Select “Use an existing project” for the next question, then choose the project we created in the Firebase web console earlier and confirm with Enter. If you’re new to Firebase, you will only see one option
+
+6) Press Enter to the question, “What do you want to use as your public directory?” This will automatically create the public folder in your directory. Files inside the public folder will be deployed on the Firebase Hosting
+
+7) Enter “N” when you’re asked, “Configure as a single-page app (rewrite all urls to /index.html)?” Entering “Y” attempts to override the index.html file
+
+8) firebase deploy
+
+Re-deploy the application:
+
+1) ng build
+
+2) firebase deploy
